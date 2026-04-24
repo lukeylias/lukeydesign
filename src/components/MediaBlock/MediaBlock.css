@@ -1,0 +1,105 @@
+/* ------------------------------------------------------------------ */
+/*  MediaBlock — shared styles                                        */
+/* ------------------------------------------------------------------ */
+
+.media-block {
+  display: block;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius);
+}
+
+/* ---- Thumbnail (250×250 crop) ---- */
+
+.media-block--thumbnail {
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.media-block--placeholder {
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1;
+  background: var(--win98-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-block__icon {
+  font-size: 32px;
+  color: var(--color-text);
+  opacity: 0.5;
+}
+
+/* ---- Hero (full modal width) ---- */
+
+.media-block--hero {
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+/* ---- Body (inline full-width) ---- */
+
+.media-block--body {
+  width: 100%;
+  height: auto;
+  margin: var(--space-2) 0;
+}
+
+/* ---- Video / iframe wrapper (16:9) ---- */
+
+.media-block--video-wrapper,
+.media-block--iframe-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 default */
+  height: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--border-radius);
+  margin: var(--space-2) 0;
+}
+
+.media-block--hero.media-block--video-wrapper {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  margin: 0;
+}
+
+.media-block--iframe-wrapper {
+  /* aspect-ratio set inline; padding-bottom overridden */
+  padding-bottom: 0;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.media-block__iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.media-block--iframe-wrapper .media-block__iframe {
+  position: static;
+  aspect-ratio: inherit;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 720px) {
+  .media-block--thumbnail {
+    max-width: 100%;
+  }
+}

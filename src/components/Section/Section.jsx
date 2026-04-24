@@ -1,7 +1,7 @@
 import ContentGrid from '../ContentGrid/ContentGrid';
 import './Section.css';
 
-export default function Section({ section, onHeadlineClick, onImageClick }) {
+export default function Section({ section, onHeadlineClick, onLightbox }) {
   return (
     <section id={section.id} className="section">
       <div className="section__label">{section.label}</div>
@@ -13,7 +13,7 @@ export default function Section({ section, onHeadlineClick, onImageClick }) {
           items={section.items}
           sectionId={section.id}
           onHeadlineClick={onHeadlineClick}
-          onImageClick={onImageClick}
+          onLightbox={onLightbox}
         />
       )}
     </section>
