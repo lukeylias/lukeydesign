@@ -1,6 +1,10 @@
+import MediaBlock from '../MediaBlock/MediaBlock';
+import { getThumbnail } from '../../utils/media';
 import './GridItem.css';
 
-export default function GridItem({ item, sectionId, onHeadlineClick, onImageClick }) {
+export default function GridItem({ item, sectionId, onHeadlineClick, onLightbox }) {
+  const thumbnailMedia = getThumbnail(item);
+
   return (
     <article className="grid-item" data-slug={item.slug}>
       <a
@@ -15,15 +19,11 @@ export default function GridItem({ item, sectionId, onHeadlineClick, onImageClic
         {item.headline}
       </a>
       <p className="grid-item__body">{item.body}</p>
-      {item.image && (
-        <img
-          src={item.image}
-          alt={item.headline}
-          className="grid-item__image"
-          onClick={(e) => {
-            e.stopPropagation();
-            onImageClick?.(item.image, item.headline);
-          }}
+      {thumbnailMedia && (
+        <MediaBlock
+          media={thumbnailMedia}
+          context="thumbnail"
+          onLightbox={onLightbox}
         />
       )}
     </article>

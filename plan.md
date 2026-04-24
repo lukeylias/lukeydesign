@@ -16,8 +16,7 @@ Replace all placeholder content across the portfolio site with real case studies
 - Layout, styling, or structural changes to components
 - New components or routes
 
-## Execution mode
-Critical: no
+## Execution modeCritical: no
 
 ## Phases
 
@@ -39,7 +38,6 @@ Critical: no
 - Remove the `<p className="sidebar__bio">` element entirely
 - Replace `about.js` content with array of five lines: role, approach, philosophy, tools, location
 **Done when:** Sidebar renders "Design, code & AI" with no bio paragraph; About section renders five content lines
-
 ### Phase 3: Work section
 **Goal:** Six real case studies replace 15 placeholder items
 **Files:** `src/data/work.js`
@@ -48,7 +46,6 @@ Critical: no
 - Each item gets `slug`, `headline`, `body` (card summary), and `modalContent` array with interleaved text and image blocks using `/images/filename` paths
 - Set `defaultVisible` to 6
 **Done when:** Work grid shows 6 cards with correct titles and summaries; modals render full content with interleaved images
-
 ### Phase 4: Stack section
 **Goal:** Seven real tools replace 15 placeholder items
 **Files:** `src/data/stack.js`

@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
+import MediaBlock from '../MediaBlock/MediaBlock';
+import Lightbox from '../Lightbox/Lightbox';
 import './Modal.css';
 
-export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
+export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggleExpanded, lightbox }) {
   const dialogRef = useRef(null);
 
   // Sync dialog open state with React state
@@ -41,7 +43,7 @@ export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
   return (
     <dialog
       ref={dialogRef}
-      className="modal"
+      className={`modal ${isExpanded ? 'modal--expanded' : 'modal--default'}`}
       id="modal"
       aria-labelledby="modal-title"
       onClick={handleDialogClick}
@@ -52,6 +54,14 @@ export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
         </span>
         <div className="modal__controls">
           <button
+            className="modal__btn modal__btn--expand"
+            aria-label={isExpanded ? 'Restore' : 'Expand'}
+            title={isExpanded ? 'Restore' : 'Expand'}
+            onClick={onToggleExpanded}
+          >
+            {isExpanded ? '❐' : '□'}
+          </button>
+          <button
             className="modal__btn modal__btn--close"
             aria-label="Close"
             title="Close"
@@ -61,23 +71,22 @@ export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
           </button>
         </div>
       </div>
+
       <div className="modal__body" id="modal-body">
+        <div className="modal__body-inner">
         {item && (
           <>
             <h2>{item.headline}</h2>
             {item.modalContent ? (
               item.modalContent.map((block, i) => {
                 if (block.type === 'text') return <p key={i}>{block.value}</p>;
-                if (block.type === 'link') return <p key={i}><a href={block.href} target="_blank" rel="noopener">{block.label || block.href}</a></p>;
+                if (block.type === 'link') return <p key={i}><a href={block.href} target="_blank" rel="noopener noreferrer">{block.label || block.href}</a></p>;
                 if (block.type === 'image') return (
-                  <img
+                  <MediaBlock
                     key={i}
-                    src={block.src}
-                    alt={block.alt || item.headline}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onImageClick?.(block.src, block.alt || item.headline);
-                    }}
+                    media={{ type: 'image', src: block.src, alt: block.alt || item.headline }}
+                    context="body"
+                    onLightbox={lightbox.open}
                   />
                 );
                 return null;
@@ -85,21 +94,28 @@ export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
             ) : (
               <>
                 <p>{item.body}</p>
-                {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.headline}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onImageClick?.(item.image, item.headline);
-                    }}
+                {item.media?.map((m, i) => (
+                  <MediaBlock
+                    key={i}
+                    media={m}
+                    context="body"
+                    onLightbox={lightbox.open}
                   />
-                )}
+                ))}
               </>
             )}
           </>
         )}
+        </div>
       </div>
+
+      {/* Inline lightbox — rendered inside dialog to stay above backdrop */}
+      <Lightbox
+        isOpen={lightbox.isOpen}
+        media={lightbox.media}
+        onClose={lightbox.close}
+        inline
+      />
     </dialog>
   );
 }
