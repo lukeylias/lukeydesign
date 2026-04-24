@@ -7,7 +7,9 @@ export default function Section({ section, onHeadlineClick, onImageClick }) {
       <div className="section__label">{section.label}</div>
       <hr className="section__divider" />
       {section.type === 'prose' ? (
-        <p className="section__about-placeholder">{section.content}</p>
+        Array.isArray(section.content)
+          ? <ul className="section__about-list">{section.content.map((line, i) => <li key={i}>{line}</li>)}</ul>
+          : <p className="section__about-placeholder">{section.content}</p>
       ) : (
         <ContentGrid
           items={section.items}

@@ -65,19 +65,38 @@ export default function Modal({ isOpen, activeItem, onClose, onImageClick }) {
         {item && (
           <>
             <h2>{item.headline}</h2>
-            <p>{item.body}</p>
-            {item.image && (
-              <img
-                src={item.image}
-                alt={item.headline}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onImageClick?.(item.image, item.headline);
-                }}
-              />
+            {item.modalContent ? (
+              item.modalContent.map((block, i) => {
+                if (block.type === 'text') return <p key={i}>{block.value}</p>;
+                if (block.type === 'link') return <p key={i}><a href={block.href} target="_blank" rel="noopener">{block.label || block.href}</a></p>;
+                if (block.type === 'image') return (
+                  <img
+                    key={i}
+                    src={block.src}
+                    alt={block.alt || item.headline}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onImageClick?.(block.src, block.alt || item.headline);
+                    }}
+                  />
+                );
+                return null;
+              })
+            ) : (
+              <>
+                <p>{item.body}</p>
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.headline}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onImageClick?.(item.image, item.headline);
+                    }}
+                  />
+                )}
+              </>
             )}
-            <p>This is placeholder modal content. In production, this would contain the full article, case study, or write-up with rich content including headings, images, code blocks, and embeds.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
           </>
         )}
       </div>
