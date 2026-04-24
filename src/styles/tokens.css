@@ -1,0 +1,48 @@
+/* ========================================
+   Design Tokens (from v2.css :root)
+   ======================================== */
+
+:root {
+  /* Colours */
+  --color-bg: #FFFFFF;
+  --color-text: #000000;
+  --color-link: #0000FF;
+  --color-border: #000000;
+  --color-border-light: #C0C0C0;
+
+  /* Win98 chrome */
+  --win98-titlebar: #000080;
+  --win98-titlebar-text: #FFFFFF;
+  --win98-bg: #C0C0C0;
+  --win98-btn-highlight: #FFFFFF;
+  --win98-btn-shadow: #808080;
+  --win98-btn-dark-shadow: #000000;
+
+  /* Typography */
+  --font-heading: 'JetBrains Mono', monospace;
+  --font-body: 'JetBrains Mono', monospace;
+  --font-size-body: 14px;
+  --font-size-label: 14px;
+
+  /* Spacing (8px base unit) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  /* Layout */
+  --sidebar-width: 232px;
+  --border-radius: 0;
+  --grid-columns: 5;
+}
+
+/* Responsive column overrides */
+@media (max-width: 1024px) {
+  :root { --grid-columns: 3; }
+}
+@media (max-width: 768px) {
+  :root { --grid-columns: 2; }
+}
+@media (max-width: 480px) {
+  :root { --grid-columns: 1; }
+}

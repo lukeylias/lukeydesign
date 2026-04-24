@@ -1,0 +1,10 @@
+.content-grid {
+  columns: var(--grid-columns);
+  column-gap: var(--space-3);
+  position: relative;
+}
+
+.content-grid .grid-item {
+  break-inside: avoid;
+  margin-bottom: var(--space-3);
+}
