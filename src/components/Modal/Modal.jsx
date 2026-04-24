@@ -89,6 +89,13 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
                     onLightbox={lightbox.open}
                   />
                 );
+                if (block.type === 'video') return (
+                  <MediaBlock
+                    key={i}
+                    media={{ type: 'video', src: block.src, alt: block.alt || item.headline }}
+                    context="body"
+                  />
+                );
                 return null;
               })
             ) : (

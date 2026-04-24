@@ -68,9 +68,28 @@ function HeroMedia({ media, onLightbox }) {
   );
 }
 
+/** Check if a video src is a direct file (e.g. .mp4, .webm) rather than a streaming embed. */
+function isDirectVideo(src) {
+  return /\.(mp4|webm|ogg|mov)([?#]|$)/i.test(src);
+}
+
 /** Inline body media — images, videos, iframes all supported. */
 function BodyMedia({ media, onLightbox }) {
   if (media.type === 'video') {
+    if (isDirectVideo(media.src)) {
+      return (
+        <div className="media-block media-block--body media-block--video-wrapper">
+          <video
+            src={media.src}
+            controls
+            playsInline
+            preload="metadata"
+            className="media-block__iframe"
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+          />
+        </div>
+      );
+    }
     return (
       <div className="media-block media-block--body media-block--video-wrapper">
         <iframe
