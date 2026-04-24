@@ -9,18 +9,26 @@ export default function useModal() {
   const triggerRef = useRef(null);
   const scrollYRef = useRef(0);
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const open = useCallback((item, sectionId, triggerEl) => {
     scrollYRef.current = window.scrollY;
     triggerRef.current = triggerEl || null;
     setActiveItem({ sectionId, item });
     setIsOpen(true);
+    setIsExpanded(false);
     setHash(sectionId, item.slug);
     document.body.classList.add('modal-open');
   }, [setHash]);
 
+  const toggleExpanded = useCallback(() => {
+    setIsExpanded((prev) => !prev);
+  }, []);
+
   const close = useCallback(() => {
     setIsOpen(false);
     setActiveItem(null);
+    setIsExpanded(false);
     clearHash();
     document.body.classList.remove('modal-open');
     window.scrollTo(0, scrollYRef.current);
@@ -56,5 +64,5 @@ export default function useModal() {
     }
   }, [route]);
 
-  return { isOpen, activeItem, open, close };
+  return { isOpen, activeItem, isExpanded, open, close, toggleExpanded };
 }

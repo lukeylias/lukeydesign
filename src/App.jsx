@@ -3,33 +3,33 @@ import Sidebar from './components/Sidebar/Sidebar';
 import MobileNav from './components/MobileNav/MobileNav';
 import Section from './components/Section/Section';
 import Modal from './components/Modal/Modal';
-import MediaViewer from './components/MediaViewer/MediaViewer';
+import Lightbox from './components/Lightbox/Lightbox';
 import sections from './data';
 import useModal from './hooks/useModal';
-import useMediaViewer from './hooks/useMediaViewer';
+import useLightbox from './hooks/useLightbox';
 import './styles/tokens.css';
 import './styles/reset.css';
 import './styles/layout.css';
 
 export default function App() {
   const modal = useModal();
-  const mediaViewer = useMediaViewer();
+  const lightbox = useLightbox();
 
   function handleHeadlineClick(item, sectionId) {
     modal.open(item, sectionId);
   }
 
-  function handleImageClick(src, alt) {
-    mediaViewer.open(src, alt);
+  function handleLightbox(media) {
+    lightbox.open(media);
   }
 
-  // Centralised ESC handler — media viewer first, then modal
+  // Centralised ESC handler — lightbox first, then modal
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
-        if (mediaViewer.isOpen) {
+        if (lightbox.isOpen) {
           e.preventDefault();
-          mediaViewer.close();
+          lightbox.close();
         } else if (modal.isOpen) {
           e.preventDefault();
           modal.close();
@@ -38,7 +38,7 @@ export default function App() {
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [mediaViewer.isOpen, modal.isOpen, mediaViewer.close, modal.close]);
+  }, [lightbox.isOpen, modal.isOpen, lightbox.close, modal.close]);
 
   return (
     <>
@@ -52,7 +52,7 @@ export default function App() {
               key={section.id}
               section={section}
               onHeadlineClick={handleHeadlineClick}
-              onImageClick={handleImageClick}
+              onLightbox={handleLightbox}
             />
           ))}
         </main>
@@ -60,15 +60,19 @@ export default function App() {
       <Modal
         isOpen={modal.isOpen}
         activeItem={modal.activeItem}
+        isExpanded={modal.isExpanded}
         onClose={modal.close}
-        onImageClick={handleImageClick}
+        onToggleExpanded={modal.toggleExpanded}
+        lightbox={lightbox}
       />
-      <MediaViewer
-        isOpen={mediaViewer.isOpen}
-        src={mediaViewer.src}
-        alt={mediaViewer.alt}
-        onClose={mediaViewer.close}
-      />
+      {/* Standalone lightbox for card thumbnails when no modal is open */}
+      {!modal.isOpen && (
+        <Lightbox
+          isOpen={lightbox.isOpen}
+          media={lightbox.media}
+          onClose={lightbox.close}
+        />
+      )}
     </>
   );
 }

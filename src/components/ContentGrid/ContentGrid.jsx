@@ -1,7 +1,7 @@
 import GridItem from '../GridItem/GridItem';
 import './ContentGrid.css';
 
-export default function ContentGrid({ items, sectionId, onHeadlineClick, onImageClick }) {
+export default function ContentGrid({ items, sectionId, onHeadlineClick, onLightbox }) {
   return (
     <div className="content-grid">
       {items.map((item) => (
@@ -10,7 +10,7 @@ export default function ContentGrid({ items, sectionId, onHeadlineClick, onImage
           item={item}
           sectionId={sectionId}
           onHeadlineClick={onHeadlineClick}
-          onImageClick={onImageClick}
+          onLightbox={onLightbox}
         />
       ))}
     </div>
