@@ -15,7 +15,7 @@ const EXTERNAL_LINKS = [
   { href: 'https://twitter.com/lukeylias', label: 'Twitter', external: true },
 ];
 
-export default function MobileNav() {
+export default function MobileNav({ onOpenChat }) {
   const [isOpen, setIsOpen] = useState(false);
   const overlayRef = useRef(null);
   const toggleRef = useRef(null);
@@ -69,7 +69,13 @@ export default function MobileNav() {
           {NAV_LINKS.map(({ href, label }) => (
             <a key={href} href={href} onClick={close}>{label}</a>
           ))}
-          <a href="chatbot.html" onClick={close}>Chatbot (v1)</a>
+          <button
+            className="mobile-overlay__chat-btn"
+            onClick={() => { onOpenChat(); close(); }}
+            type="button"
+          >
+            💬 Chat
+          </button>
         </nav>
         <div className="mobile-overlay__links">
           {EXTERNAL_LINKS.map(({ href, label, external }) => (
