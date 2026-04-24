@@ -49,6 +49,28 @@
   font-size: var(--font-size-label);
 }
 
+.sidebar__chat-btn {
+  width: 100%;
+  border: 2px solid;
+  border-color: var(--win98-btn-highlight) var(--win98-btn-shadow) var(--win98-btn-shadow) var(--win98-btn-highlight);
+  background: var(--win98-bg);
+  padding: 6px 10px;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-label);
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text);
+  margin-top: 4px;
+}
+
+.sidebar__chat-btn:hover {
+  background: #d4d0c8;
+}
+
+.sidebar__chat-btn:active {
+  border-color: var(--win98-btn-shadow) var(--win98-btn-highlight) var(--win98-btn-highlight) var(--win98-btn-shadow);
+}
+
 @media (max-width: 768px) {
   .sidebar {
     display: none;

@@ -80,6 +80,30 @@
   align-items: center;
 }
 
+.mobile-overlay__chat-btn {
+  width: 100%;
+  border: 2px solid;
+  border-color: var(--win98-btn-highlight) var(--win98-btn-shadow) var(--win98-btn-shadow) var(--win98-btn-highlight);
+  background: var(--win98-bg);
+  padding: 8px 12px;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-overlay__chat-btn:hover {
+  background: #d4d0c8;
+}
+
+.mobile-overlay__chat-btn:active {
+  border-color: var(--win98-btn-shadow) var(--win98-btn-highlight) var(--win98-btn-highlight) var(--win98-btn-shadow);
+}
+
 @media (max-width: 768px) {
   .mobile-nav {
     display: flex;

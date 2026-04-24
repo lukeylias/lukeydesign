@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import useFocusTrap from '../../hooks/useFocusTrap';
 import './Lightbox.css';
 
 /**
@@ -12,6 +14,9 @@ import './Lightbox.css';
  * Both share the same visual treatment.
  */
 export default function Lightbox({ isOpen, media, onClose, inline = false }) {
+  const containerRef = useRef(null);
+  useFocusTrap(containerRef, isOpen && !!media);
+
   if (!isOpen || !media) return null;
 
   const content = (
@@ -41,9 +46,9 @@ export default function Lightbox({ isOpen, media, onClose, inline = false }) {
   );
 
   if (inline) {
-    return <div className="lightbox lightbox--inline">{content}</div>;
+    return <div className="lightbox lightbox--inline" ref={containerRef}>{content}</div>;
   }
 
   // Standalone mode — render as a simple fixed overlay
-  return <div className="lightbox lightbox--standalone">{content}</div>;
+  return <div className="lightbox lightbox--standalone" ref={containerRef}>{content}</div>;
 }

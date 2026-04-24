@@ -13,7 +13,7 @@ const EXTERNAL_LINKS = [
   { href: 'https://twitter.com/lukeylias', label: 'Twitter', external: true },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onOpenChat }) {
   return (
     <aside className="sidebar" role="complementary">
       <div>
@@ -25,7 +25,9 @@ export default function Sidebar() {
         {NAV_LINKS.map(({ href, label }) => (
           <a key={href} href={href}>{label}</a>
         ))}
-        <a href="chatbot.html">Chatbot (v1)</a>
+        <button className="sidebar__chat-btn" onClick={onOpenChat} type="button">
+          💬 Chat
+        </button>
       </nav>
 
       <div className="sidebar__links">

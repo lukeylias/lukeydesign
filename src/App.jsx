@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar/Sidebar';
 import MobileNav from './components/MobileNav/MobileNav';
 import Section from './components/Section/Section';
 import Modal from './components/Modal/Modal';
 import Lightbox from './components/Lightbox/Lightbox';
+import Chatbot from './components/Chatbot/Chatbot';
 import sections from './data';
 import useModal from './hooks/useModal';
 import useLightbox from './hooks/useLightbox';
@@ -14,6 +15,7 @@ import './styles/layout.css';
 export default function App() {
   const modal = useModal();
   const lightbox = useLightbox();
+  const [chatOpen, setChatOpen] = useState(false);
 
   function handleHeadlineClick(item, sectionId) {
     modal.open(item, sectionId);
@@ -23,11 +25,14 @@ export default function App() {
     lightbox.open(media);
   }
 
-  // Centralised ESC handler — lightbox first, then modal
+  // Centralised ESC handler — chatbot first, then lightbox, then modal
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === 'Escape') {
-        if (lightbox.isOpen) {
+        if (chatOpen) {
+          e.preventDefault();
+          setChatOpen(false);
+        } else if (lightbox.isOpen) {
           e.preventDefault();
           lightbox.close();
         } else if (modal.isOpen) {
@@ -38,14 +43,21 @@ export default function App() {
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [lightbox.isOpen, modal.isOpen, lightbox.close, modal.close]);
+  }, [chatOpen, lightbox.isOpen, modal.isOpen, lightbox.close, modal.close]);
+
+  // Lock body scroll when any modal is open
+  useEffect(() => {
+    const anyOpen = chatOpen || modal.isOpen || lightbox.isOpen;
+    document.body.style.overflow = anyOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [chatOpen, modal.isOpen, lightbox.isOpen]);
 
   return (
     <>
       <a href="#main-content" className="skip-nav">Skip to content</a>
-      <MobileNav />
+      <MobileNav onOpenChat={() => setChatOpen(true)} />
       <div className="site-layout">
-        <Sidebar />
+        <Sidebar onOpenChat={() => setChatOpen(true)} />
         <main id="main-content" className="main-content">
           {sections.map((section) => (
             <Section
@@ -73,6 +85,7 @@ export default function App() {
           onClose={lightbox.close}
         />
       )}
+      <Chatbot isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </>
   );
 }
