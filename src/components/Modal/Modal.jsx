@@ -77,20 +77,33 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
         {item && (
           <>
             <h2>{item.headline}</h2>
-            <p>{item.body}</p>
-
-            {/* Additional media entries rendered inline */}
-            {item.media?.map((m, i) => (
-              <MediaBlock
-                key={i}
-                media={m}
-                context="body"
-                onLightbox={lightbox.open}
-              />
-            ))}
-
-            <p>This is placeholder modal content. In production, this would contain the full article, case study, or write-up with rich content including headings, images, code blocks, and embeds.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            {item.modalContent ? (
+              item.modalContent.map((block, i) => {
+                if (block.type === 'text') return <p key={i}>{block.value}</p>;
+                if (block.type === 'link') return <p key={i}><a href={block.href} target="_blank" rel="noopener noreferrer">{block.label || block.href}</a></p>;
+                if (block.type === 'image') return (
+                  <MediaBlock
+                    key={i}
+                    media={{ type: 'image', src: block.src, alt: block.alt || item.headline }}
+                    context="body"
+                    onLightbox={lightbox.open}
+                  />
+                );
+                return null;
+              })
+            ) : (
+              <>
+                <p>{item.body}</p>
+                {item.media?.map((m, i) => (
+                  <MediaBlock
+                    key={i}
+                    media={m}
+                    context="body"
+                    onLightbox={lightbox.open}
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
         </div>

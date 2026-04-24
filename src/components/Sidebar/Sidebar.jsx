@@ -18,12 +18,8 @@ export default function Sidebar() {
     <aside className="sidebar" role="complementary">
       <div>
         <div className="sidebar__name">Luke Ylias</div>
-        <div className="sidebar__tagline">Design &amp; technology</div>
+        <div className="sidebar__tagline">Design, code &amp; AI</div>
       </div>
-
-      <p className="sidebar__bio">
-        Placeholder bio — a short paragraph about what Luke does, interests, and current focus.
-      </p>
 
       <nav className="sidebar__nav" aria-label="Main navigation">
         {NAV_LINKS.map(({ href, label }) => (

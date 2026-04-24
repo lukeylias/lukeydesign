@@ -2,22 +2,63 @@ export default {
   id: 'stack',
   label: 'Stack',
   type: 'grid',
-  defaultVisible: 10,
+  defaultVisible: 7,
   items: [
-    { slug: 'figma', headline: 'Figma', body: 'Still the best tool for collaborative UI work. Auto-layout and components make it feel like writing CSS visually.', media: [{ type: 'image', src: 'https://placehold.co/800x600', alt: 'Figma' }] },
-    { slug: 'vs-code', headline: 'VS Code', body: 'Lightweight enough for quick edits, powerful enough for real projects. Extensions keep it flexible without being bloated.' },
-    { slug: 'arc-browser', headline: 'Arc Browser', body: 'Replaced Chrome last year and haven\'t looked back. Spaces and profiles keep work and personal browsing cleanly separated.' },
-    { slug: 'linear', headline: 'Linear', body: 'Fast, keyboard-driven, and opinionated in the right ways. Makes project management feel less like project management.', media: [{ type: 'image', src: 'https://placehold.co/800x600', alt: 'Linear' }] },
-    { slug: 'obsidian', headline: 'Obsidian', body: 'Local-first markdown notes with bidirectional linking. The graph view is a gimmick but the core editing experience is solid.' },
-    { slug: 'github-copilot', headline: 'GitHub Copilot', body: 'AI pair programming that actually helps. Best for boilerplate, tests, and exploring unfamiliar APIs.' },
-    { slug: 'raycast', headline: 'Raycast', body: 'Spotlight replacement with extensions, snippets, and window management. The clipboard history alone is worth it.', media: [{ type: 'image', src: 'https://placehold.co/800x600', alt: 'Raycast' }] },
-    { slug: 'warp-terminal', headline: 'Warp Terminal', body: 'Modern terminal with blocks, AI command search, and proper text editing. Feels like a terminal from the future.' },
-    { slug: 'notion', headline: 'Notion', body: 'For team wikis and project briefs. Not as fast as Obsidian for personal notes but unbeatable for shared documentation.' },
-    { slug: 'vercel', headline: 'Vercel', body: 'Deploy on push with zero config. Preview deployments for every PR make async design review painless.' },
-    { slug: 'tailwind-css', headline: 'Tailwind CSS', body: 'Utility-first CSS that clicks once you stop fighting it. Great for prototyping and production alike.' },
-    { slug: 'cloudflare', headline: 'Cloudflare', body: 'DNS, CDN, and Workers in one place. The free tier is generous enough for most personal projects.', media: [{ type: 'image', src: 'https://placehold.co/800x600', alt: 'Cloudflare' }] },
-    { slug: 'docker', headline: 'Docker', body: 'Containerised dev environments that actually match production. No more "works on my machine" conversations.' },
-    { slug: 'stripe', headline: 'Stripe', body: 'Best-in-class payment APIs. The documentation alone sets the standard for developer experience.' },
-    { slug: 'postcss', headline: 'PostCSS', body: 'CSS transforms and future syntax today. Autoprefixer and nesting make it essential in any build pipeline.' },
+    {
+      slug: 'magic-patterns',
+      headline: 'Magic Patterns',
+      body: 'One of my favourite emerging design tools. Rapid prototyping, great interactions, diverge and converge on ideas quickly. Integrates with codebases and builds React. Genuinely exciting right now.',
+      modalContent: [
+        { type: 'text', value: 'One of my favourite emerging design tools. Rapid prototyping, great interactions, diverge and converge on ideas quickly. Integrates with codebases and builds React. Genuinely exciting right now.' },
+      ],
+    },
+    {
+      slug: 'pi',
+      headline: 'Pi',
+      body: 'My own lightweight coding agent, built for purpose. Highly configurable, stripped back by design. The real value is that it helps me understand what the code is doing, not just ship it. Building it out is as fun as using it.',
+      modalContent: [
+        { type: 'text', value: 'My own lightweight coding agent, built for purpose. Highly configurable, stripped back by design. The real value is that it helps me understand what the code is doing, not just ship it. Building it out is as fun as using it.' },
+      ],
+    },
+    {
+      slug: 'opencode',
+      headline: 'OpenCode',
+      body: 'CLI coding agent that lets me use work-approved models. Also configured as a research and analysis agent for delegating deep work. Set it up, point it at a problem, let it run.',
+      modalContent: [
+        { type: 'text', value: 'CLI coding agent that lets me use work-approved models. Also configured as a research and analysis agent for delegating deep work. Set it up, point it at a problem, let it run.' },
+      ],
+    },
+    {
+      slug: 'claude',
+      headline: 'Claude',
+      body: 'Primary thinking partner. Always on, embedded across the whole workflow. Less a tool I pick up for a specific job, more a constant presence for thinking through problems and shaping ideas.',
+      modalContent: [
+        { type: 'text', value: 'Primary thinking partner. Always on, embedded across the whole workflow. Less a tool I pick up for a specific job, more a constant presence for thinking through problems and shaping ideas.' },
+      ],
+    },
+    {
+      slug: 'granola',
+      headline: 'Granola',
+      body: 'Captures meeting notes automatically. I query those meetings using the MCP with my agent. Simple, effective, means I never have to write notes manually again.',
+      modalContent: [
+        { type: 'text', value: 'Captures meeting notes automatically. I query those meetings using the MCP with my agent. Simple, effective, means I never have to write notes manually again.' },
+      ],
+    },
+    {
+      slug: 'wispr-flow',
+      headline: 'Wispr Flow',
+      body: 'Voice to text. More efficient, very accurate, cuts down on typing. Underrated.',
+      modalContent: [
+        { type: 'text', value: 'Voice to text. More efficient, very accurate, cuts down on typing. Underrated.' },
+      ],
+    },
+    {
+      slug: 'figma',
+      headline: 'Figma',
+      body: 'The default. Deeply embedded in the company ecosystem and the approved tool. Been using it since launch.',
+      modalContent: [
+        { type: 'text', value: 'The default. Deeply embedded in the company ecosystem and the approved tool. Been using it since launch.' },
+      ],
+    },
   ],
 };
