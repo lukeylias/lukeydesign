@@ -1,28 +1,89 @@
 import { useEffect, useRef } from 'react';
 import MediaBlock from '../MediaBlock/MediaBlock';
-import Lightbox from '../Lightbox/Lightbox';
 import './Modal.css';
 
-export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggleExpanded, lightbox }) {
+/**
+ * Groups modalContent blocks into segments:
+ * - consecutive non-image blocks are wrapped in { type: 'text-group', blocks: [...] }
+ * - image/gif blocks become { type: 'media', block, index }
+ * Returns an array of segments + total image count.
+ */
+function groupModalContent(modalContent) {
+  const segments = [];
+  let textGroup = [];
+  let imageIndex = 0;
+
+  function flushText() {
+    if (textGroup.length > 0) {
+      segments.push({ type: 'text-group', blocks: textGroup });
+      textGroup = [];
+    }
+  }
+
+  for (const block of modalContent) {
+    if (block.type === 'image') {
+      flushText();
+      segments.push({ type: 'media', block, index: imageIndex++ });
+    } else {
+      textGroup.push(block);
+    }
+  }
+  flushText();
+
+  return { segments, imageCountFromContent: imageIndex };
+}
+
+function renderTextBlock(block, i, item) {
+  if (block.type === 'text') return <p key={i}>{block.value}</p>;
+  if (block.type === 'link') {
+    const isExternal = block.href && (block.href.startsWith('http') || block.href.startsWith('//'));
+    return (
+      <p key={i}>
+        <a href={block.href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+          {block.label || block.href}{isExternal && ' ↗'}
+        </a>
+      </p>
+    );
+  }
+  if (block.type === 'table') return (
+    <table key={i} className="modal__table">
+      <thead>
+        <tr>{block.headers.map((h, j) => <th key={j}>{h}</th>)}</tr>
+      </thead>
+      <tbody>
+        {block.rows.map((row, j) => (
+          <tr key={j}>{row.map((cell, k) => <td key={k}>{cell}</td>)}</tr>
+        ))}
+      </tbody>
+    </table>
+  );
+  if (block.type === 'video') return (
+    <MediaBlock
+      key={i}
+      media={{ type: 'video', src: block.src, alt: block.alt || item.headline }}
+      context="body"
+    />
+  );
+  return null;
+}
+
+export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggleExpanded }) {
   const dialogRef = useRef(null);
 
-  // Sync dialog open state with React state
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-
     if (isOpen && !dialog.open) {
       dialog.showModal();
-    } else if (!isOpen && dialog.open) {
-      dialog.close();
+      const body = dialog.querySelector('#modal-body');
+      if (body) body.scrollTop = 0;
     }
+    else if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 
-  // Prevent native ESC — we handle it in the parent
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-
     function handleCancel(e) {
       e.preventDefault();
       onClose();
@@ -31,14 +92,82 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
     return () => dialog.removeEventListener('cancel', handleCancel);
   }, [onClose]);
 
-  // Backdrop click
   function handleDialogClick(e) {
-    if (e.target === dialogRef.current) {
-      onClose();
-    }
+    if (e.target === dialogRef.current) onClose();
   }
 
   const item = activeItem?.item;
+
+  // Build body content with image breakout
+  let bodyContent = null;
+  if (item) {
+    if (item.modalContent) {
+      const { segments, imageCountFromContent } = groupModalContent(item.modalContent);
+
+      const contentElements = segments.map((seg, i) => {
+        if (seg.type === 'text-group') {
+          return (
+            <div className="modal__body-text" key={`tg-${i}`}>
+              {seg.blocks.map((block, j) => renderTextBlock(block, j, item))}
+            </div>
+          );
+        }
+        // media segment
+        return (
+          <MediaBlock
+            key={`img-${i}`}
+            media={{ type: 'image', src: seg.block.src, alt: seg.block.alt || item.headline }}
+            context="body"
+            imageIndex={seg.index}
+          />
+        );
+      });
+
+      // Append item.media if present (with offset)
+      const mediaElements = item.media?.map((m, i) => {
+        const isImage = m.type === 'image' || m.type === 'gif';
+        return (
+          <MediaBlock
+            key={`m-${i}`}
+            media={m}
+            context="body"
+            imageIndex={isImage ? imageCountFromContent + i : undefined}
+          />
+        );
+      }) || [];
+
+      bodyContent = (
+        <>
+          <div className="modal__body-text"><h2>{item.headline}</h2></div>
+          {contentElements}
+          {mediaElements}
+        </>
+      );
+    } else {
+      // No modalContent — simple body + media
+      const mediaElements = item.media?.map((m, i) => {
+        const isImage = m.type === 'image' || m.type === 'gif';
+        return (
+          <MediaBlock
+            key={`m-${i}`}
+            media={m}
+            context="body"
+            imageIndex={isImage ? i : undefined}
+          />
+        );
+      }) || [];
+
+      bodyContent = (
+        <>
+          <div className="modal__body-text">
+            <h2>{item.headline}</h2>
+            <p>{item.body}</p>
+          </div>
+          {mediaElements}
+        </>
+      );
+    }
+  }
 
   return (
     <dialog
@@ -74,76 +203,9 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
 
       <div className="modal__body" id="modal-body">
         <div className="modal__body-inner">
-        {item && (
-          <>
-            <h2>{item.headline}</h2>
-            {item.modalContent ? (
-              item.modalContent.map((block, i) => {
-                if (block.type === 'text') return <p key={i}>{block.value}</p>;
-                if (block.type === 'link') {
-                  const isExternal = block.href && (block.href.startsWith('http') || block.href.startsWith('//'));
-                  return (
-                    <p key={i}>
-                      <a href={block.href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-                        {block.label || block.href}{isExternal && ' ↗'}
-                      </a>
-                    </p>
-                  );
-                }
-                if (block.type === 'table') return (
-                  <table key={i} className="modal__table">
-                    <thead>
-                      <tr>{block.headers.map((h, j) => <th key={j}>{h}</th>)}</tr>
-                    </thead>
-                    <tbody>
-                      {block.rows.map((row, j) => (
-                        <tr key={j}>{row.map((cell, k) => <td key={k}>{cell}</td>)}</tr>
-                      ))}
-                    </tbody>
-                  </table>
-                );
-                if (block.type === 'image') return (
-                  <MediaBlock
-                    key={i}
-                    media={{ type: 'image', src: block.src, alt: block.alt || item.headline }}
-                    context="body"
-                    onLightbox={lightbox.open}
-                  />
-                );
-                if (block.type === 'video') return (
-                  <MediaBlock
-                    key={i}
-                    media={{ type: 'video', src: block.src, alt: block.alt || item.headline }}
-                    context="body"
-                  />
-                );
-                return null;
-              })
-            ) : (
-              <>
-                <p>{item.body}</p>
-                {item.media?.map((m, i) => (
-                  <MediaBlock
-                    key={i}
-                    media={m}
-                    context="body"
-                    onLightbox={lightbox.open}
-                  />
-                ))}
-              </>
-            )}
-          </>
-        )}
+          {bodyContent}
         </div>
       </div>
-
-      {/* Inline lightbox — rendered inside dialog to stay above backdrop */}
-      <Lightbox
-        isOpen={lightbox.isOpen}
-        media={lightbox.media}
-        onClose={lightbox.close}
-        inline
-      />
     </dialog>
   );
 }

@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { isLightboxable, toEmbedUrl } from '../../utils/media';
 import './MediaBlock.css';
 
 /* ------------------------------------------------------------------ */
-/*  Sub-components — keep the public API as a single <MediaBlock>     */
+/*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
 /** 250×250 fixed crop, click opens lightbox for images/gifs. */
@@ -10,7 +11,6 @@ function ThumbnailMedia({ media, onLightbox }) {
   const lightboxable = isLightboxable(media.type);
 
   if (media.type === 'video' || media.type === 'iframe') {
-    // Poster image or placeholder
     if (media.poster) {
       return (
         <img
@@ -39,9 +39,9 @@ function ThumbnailMedia({ media, onLightbox }) {
   );
 }
 
-/** Full-width hero at top of modal. Images/gifs lightboxable, video plays inline. */
-function HeroMedia({ media, onLightbox }) {
-  if (media.type === 'iframe') return null; // iframes don't render as hero
+/** Full-width hero at top of modal. */
+function HeroMedia({ media }) {
+  if (media.type === 'iframe') return null;
 
   if (media.type === 'video') {
     return (
@@ -62,19 +62,20 @@ function HeroMedia({ media, onLightbox }) {
       className="media-block media-block--hero"
       src={media.src}
       alt={media.alt || ''}
-      onClick={(e) => { e.stopPropagation(); onLightbox?.(media); }}
-      style={{ cursor: 'zoom-in' }}
     />
   );
 }
 
-/** Check if a video src is a direct file (e.g. .mp4, .webm) rather than a streaming embed. */
+/** Check if a video src is a direct file. */
 function isDirectVideo(src) {
   return /\.(mp4|webm|ogg|mov)([?#]|$)/i.test(src);
 }
 
-/** Inline body media — images, videos, iframes all supported. */
-function BodyMedia({ media, onLightbox }) {
+/** Inline body media with Win98 chrome for images, loading state, and fade-in. */
+function BodyMedia({ media, imageIndex }) {
+  const [loaded, setLoaded] = useState(false);
+  const isImage = media.type === 'image' || media.type === 'gif';
+
   if (media.type === 'video') {
     if (isDirectVideo(media.src)) {
       return (
@@ -116,16 +117,30 @@ function BodyMedia({ media, onLightbox }) {
     );
   }
 
-  // Image or gif
-  const lightboxable = isLightboxable(media.type);
+  // Image or gif — Win98 chrome wrapper with loading state
+  const caption = media.alt || 'Image';
+  const isLazy = typeof imageIndex === 'number' && imageIndex > 0;
+
   return (
-    <img
-      className="media-block media-block--body"
-      src={media.src}
-      alt={media.alt || ''}
-      onClick={lightboxable ? (e) => { e.stopPropagation(); onLightbox?.(media); } : undefined}
-      style={lightboxable ? { cursor: 'zoom-in' } : undefined}
-    />
+    <div className="media-block media-block--body media-block--image-window">
+      <div className="media-block__titlebar">
+        <span className="media-block__titlebar-text">{caption}</span>
+      </div>
+      <div className="media-block__image-body">
+        {!loaded && (
+          <div className="media-block__placeholder">
+            <div className="media-block__spinner" />
+          </div>
+        )}
+        <img
+          src={media.src}
+          alt={media.alt || ''}
+          className={`media-block__image ${loaded ? 'media-block__image--loaded' : ''}`}
+          loading={isLazy ? 'lazy' : undefined}
+          onLoad={() => setLoaded(true)}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -136,20 +151,21 @@ function BodyMedia({ media, onLightbox }) {
 /**
  * Unified media renderer.
  *
- * @param {object}   media     - { type, src, alt?, poster?, aspectRatio? }
- * @param {string}   context   - 'thumbnail' | 'hero' | 'body'
- * @param {function} onLightbox - called with the media object when lightbox should open
+ * @param {object}   media      - { type, src, alt?, poster?, aspectRatio? }
+ * @param {string}   context    - 'thumbnail' | 'hero' | 'body'
+ * @param {function} onLightbox - called with media object when lightbox should open (thumbnail only)
+ * @param {number}   imageIndex - running image index for lazy loading (body images only)
  */
-export default function MediaBlock({ media, context = 'body', onLightbox }) {
+export default function MediaBlock({ media, context = 'body', onLightbox, imageIndex }) {
   if (!media?.src) return null;
 
   switch (context) {
     case 'thumbnail':
       return <ThumbnailMedia media={media} onLightbox={onLightbox} />;
     case 'hero':
-      return <HeroMedia media={media} onLightbox={onLightbox} />;
+      return <HeroMedia media={media} />;
     case 'body':
     default:
-      return <BodyMedia media={media} onLightbox={onLightbox} />;
+      return <BodyMedia media={media} imageIndex={imageIndex} />;
   }
 }
