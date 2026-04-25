@@ -10,7 +10,6 @@ const NAV_LINKS = [
 const EXTERNAL_LINKS = [
   { href: 'mailto:hello@lukeylias.com', label: 'Email' },
   { href: 'https://github.com/lukeylias', label: 'GitHub', external: true },
-  { href: 'https://twitter.com/lukeylias', label: 'Twitter', external: true },
 ];
 
 export default function Sidebar({ onOpenChat }) {
