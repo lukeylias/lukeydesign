@@ -21,8 +21,8 @@
   margin: auto;
   position: fixed;
   inset: 0;
-  width: 65vw;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1000px;
   max-height: 85vh;
   height: fit-content;
 }
@@ -95,7 +95,7 @@
 .modal__body {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-4);
+  padding: var(--space-4) var(--modal-padding-x);
   background: var(--color-bg);
   font-size: var(--font-size-body);
   line-height: 1.6;
@@ -183,5 +183,9 @@
     width: 42px;
     height: 42px;
     font-size: 22px;
+  }
+
+  .modal__body {
+    padding: var(--space-2) var(--space-2);
   }
 }

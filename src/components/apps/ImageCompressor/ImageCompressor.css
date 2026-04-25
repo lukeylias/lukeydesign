@@ -1,0 +1,307 @@
+/* Image Compressor – Win98 styling using site tokens */
+
+.compressor {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+
+/* Drop zone */
+.compressor__dropzone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-bg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  transition: background 0.15s;
+  min-height: 160px;
+  text-align: center;
+}
+
+.compressor__dropzone--active {
+  background: var(--win98-bg);
+  border-style: solid;
+}
+
+.compressor__dropzone-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.compressor__dropzone-text {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-body);
+}
+
+.compressor__dropzone-hint {
+  font-size: 12px;
+  color: var(--win98-btn-shadow);
+}
+
+.compressor__file-input {
+  display: none;
+}
+
+/* Preview */
+.compressor__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.compressor__preview-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border: 1px solid var(--color-border);
+  background: var(--win98-bg);
+}
+
+.compressor__file-info {
+  font-size: 12px;
+  color: var(--win98-btn-shadow);
+}
+
+/* Controls */
+.compressor__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.compressor__section-label {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-label);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Format selector */
+.compressor__formats {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.compressor__format-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--win98-bg);
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--win98-btn-shadow),
+    inset 1px 1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__format-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__format-btn--active {
+  background: var(--win98-titlebar);
+  color: var(--win98-titlebar-text);
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+/* Resize toggle */
+.compressor__resize-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.compressor__toggle {
+  width: 40px;
+  height: 20px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--win98-bg);
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__toggle--on {
+  background: var(--win98-titlebar);
+}
+
+.compressor__toggle-thumb {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 12px;
+  height: 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  transition: left 0.15s;
+}
+
+.compressor__toggle--on .compressor__toggle-thumb {
+  left: 21px;
+}
+
+/* Width presets */
+.compressor__widths {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.compressor__width-btn {
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 4px var(--space-1);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--win98-bg);
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--win98-btn-shadow),
+    inset 1px 1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__width-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__width-btn--active {
+  background: var(--win98-titlebar);
+  color: var(--win98-titlebar-text);
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+/* Compress button */
+.compressor__compress-btn {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  padding: var(--space-1) var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--win98-bg);
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--win98-btn-shadow),
+    inset 1px 1px 0 var(--win98-btn-highlight);
+  align-self: flex-start;
+}
+
+.compressor__compress-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__compress-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Result */
+.compressor__result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--color-bg);
+  padding: var(--space-2);
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 12px;
+}
+
+.compressor__meta-item {
+  display: flex;
+  gap: 4px;
+}
+
+.compressor__meta-label {
+  color: var(--win98-btn-shadow);
+}
+
+.compressor__actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.compressor__action-btn {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: var(--win98-bg);
+  cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--win98-btn-shadow),
+    inset 1px 1px 0 var(--win98-btn-highlight);
+}
+
+.compressor__action-btn:active {
+  box-shadow:
+    inset 1px 1px 0 var(--win98-btn-shadow),
+    inset -1px -1px 0 var(--win98-btn-highlight);
+}
+
+/* Error */
+.compressor__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: #ffcccc;
+  font-size: 12px;
+}
+
+.compressor__error-dismiss {
+  font-family: var(--font-body);
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Note */
+.compressor__note {
+  font-size: 12px;
+  color: var(--win98-btn-shadow);
+  font-style: italic;
+}
