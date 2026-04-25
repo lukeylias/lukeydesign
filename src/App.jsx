@@ -75,7 +75,6 @@ export default function App() {
         isExpanded={modal.isExpanded}
         onClose={modal.close}
         onToggleExpanded={modal.toggleExpanded}
-        lightbox={lightbox}
       />
       {/* Standalone lightbox for card thumbnails when no modal is open */}
       {!modal.isOpen && (

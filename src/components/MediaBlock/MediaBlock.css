@@ -50,7 +50,82 @@
 .media-block--body {
   width: 100%;
   height: auto;
-  margin: var(--space-2) 0;
+  margin: var(--space-6) 0;
+}
+
+/* ---- Win98 image window chrome ---- */
+
+.media-block--image-window {
+  border: none;
+  box-shadow:
+    inset -1px -1px 0 var(--win98-btn-shadow),
+    inset 1px 1px 0 var(--win98-btn-highlight),
+    1px 1px 0 var(--win98-btn-dark-shadow);
+  background: var(--win98-bg);
+  overflow: hidden;
+}
+
+.media-block__titlebar {
+  display: flex;
+  align-items: center;
+  background: var(--win98-titlebar);
+  color: var(--win98-titlebar-text);
+  padding: 2px 6px;
+  min-height: 22px;
+  user-select: none;
+}
+
+.media-block__titlebar-text {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.media-block__image-body {
+  position: relative;
+  background: var(--color-bg);
+  line-height: 0;
+  border-left: 2px solid var(--win98-bg);
+  border-right: 2px solid var(--win98-bg);
+  border-bottom: 2px solid var(--win98-bg);
+}
+
+.media-block__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.media-block__image--loaded {
+  opacity: 1;
+}
+
+/* ---- Loading placeholder & spinner ---- */
+
+.media-block__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--win98-bg);
+}
+
+.media-block__spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--color-border-light);
+  border-top-color: var(--win98-titlebar);
+  border-radius: 50%;
+  animation: media-block-spin 0.8s linear infinite;
+}
+
+@keyframes media-block-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ---- Video / iframe wrapper (16:9) ---- */
@@ -59,7 +134,7 @@
 .media-block--iframe-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 default */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   border: 1px solid var(--color-border-light);
@@ -76,7 +151,6 @@
 }
 
 .media-block--iframe-wrapper {
-  /* aspect-ratio set inline; padding-bottom overridden */
   padding-bottom: 0;
   height: auto;
   aspect-ratio: 16 / 9;
@@ -101,5 +175,9 @@
 @media (max-width: 720px) {
   .media-block--thumbnail {
     max-width: 100%;
+  }
+
+  .media-block--body {
+    margin: var(--space-3) 0;
   }
 }
