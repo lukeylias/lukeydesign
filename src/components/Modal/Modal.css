@@ -1,12 +1,9 @@
 .modal {
-  border: none;
+  border: 1px solid var(--color-border);
   padding: 0;
-  border-radius: var(--border-radius);
-  box-shadow:
-    inset -1px -1px 0 var(--win98-btn-shadow),
-    inset 1px 1px 0 var(--win98-btn-highlight),
-    2px 2px 8px rgba(0, 0, 0, 0.3);
-  background: var(--win98-bg);
+  border-radius: var(--border-radius-card);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  background: var(--color-surface-elevated);
   flex-direction: column;
   overflow: hidden;
 }
@@ -43,8 +40,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--win98-titlebar);
-  color: var(--win98-titlebar-text);
+  background: var(--color-surface);
+  color: var(--color-text);
   padding: 2px 4px;
   min-height: 24px;
   flex-shrink: 0;
@@ -71,10 +68,8 @@
   width: 32px;
   height: 32px;
   border: none;
-  background: var(--win98-bg);
-  box-shadow:
-    inset -1px -1px 0 var(--win98-btn-shadow),
-    inset 1px 1px 0 var(--win98-btn-highlight);
+  background: var(--color-surface);
+  box-shadow: none;
   font-family: var(--font-heading);
   font-size: 18px;
   line-height: 1;
@@ -83,13 +78,15 @@
   justify-content: center;
   cursor: pointer;
   padding: 0;
+  color: var(--color-text-secondary);
+}
+
+.modal__btn:hover {
   color: var(--color-text);
 }
 
 .modal__btn:active {
-  box-shadow:
-    inset 1px 1px 0 var(--win98-btn-shadow),
-    inset -1px -1px 0 var(--win98-btn-highlight);
+  filter: brightness(1.1);
 }
 
 .modal__body {
@@ -97,6 +94,7 @@
   overflow-y: auto;
   padding: var(--space-4) var(--modal-padding-x);
   background: var(--color-bg);
+  color: var(--color-text);
   font-size: var(--font-size-body);
   line-height: 1.6;
 }
@@ -129,10 +127,11 @@
 }
 
 .modal__body pre {
-  background: #f4f4f4;
+  background: var(--color-surface);
+  color: var(--color-text);
   padding: var(--space-2);
   overflow-x: auto;
-  font-family: var(--font-heading);
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
   font-size: 13px;
   margin-bottom: var(--space-2);
 }
@@ -148,11 +147,11 @@
 .modal__table td {
   text-align: left;
   padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
 }
 
 .modal__table th {
-  background: var(--win98-bg);
+  background: var(--color-surface);
   font-family: var(--font-heading);
   font-weight: 700;
 }
