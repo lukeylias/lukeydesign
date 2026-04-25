@@ -80,7 +80,28 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
             {item.modalContent ? (
               item.modalContent.map((block, i) => {
                 if (block.type === 'text') return <p key={i}>{block.value}</p>;
-                if (block.type === 'link') return <p key={i}><a href={block.href} target="_blank" rel="noopener noreferrer">{block.label || block.href}</a></p>;
+                if (block.type === 'link') {
+                  const isExternal = block.href && (block.href.startsWith('http') || block.href.startsWith('//'));
+                  return (
+                    <p key={i}>
+                      <a href={block.href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                        {block.label || block.href}{isExternal && ' ↗'}
+                      </a>
+                    </p>
+                  );
+                }
+                if (block.type === 'table') return (
+                  <table key={i} className="modal__table">
+                    <thead>
+                      <tr>{block.headers.map((h, j) => <th key={j}>{h}</th>)}</tr>
+                    </thead>
+                    <tbody>
+                      {block.rows.map((row, j) => (
+                        <tr key={j}>{row.map((cell, k) => <td key={k}>{cell}</td>)}</tr>
+                      ))}
+                    </tbody>
+                  </table>
+                );
                 if (block.type === 'image') return (
                   <MediaBlock
                     key={i}

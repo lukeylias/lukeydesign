@@ -5,6 +5,32 @@ export default {
   defaultVisible: 3,
   items: [
     {
+      slug: 'skills',
+      headline: 'SKILLS.md',
+      body: 'A curated list of my coding agent skills.',
+      modalContent: [
+        { type: 'text', value: 'A curated list of reusable skills I\'ve built for Pi, my coding agent. Each skill teaches the agent how to perform a specific task.' },
+        { type: 'link', href: 'https://github.com/lukeylias/lukeydev', label: 'github.com/lukeylias/lukeydev' },
+        {
+          type: 'table',
+          headers: ['Skill', 'Description', 'Output'],
+          rows: [
+            ['branch', 'Create a new git branch from an up-to-date base branch.', 'New git branch'],
+            ['commit', 'Make clean, safe, well-formatted git commits.', 'Git commit'],
+            ['explain', 'Summarise and explain content aloud via ElevenLabs TTS.', 'Spoken audio + terminal summary'],
+            ['grill', 'Interview the user relentlessly about a plan or design until reaching shared understanding.', 'Shared understanding (conversation)'],
+            ['overview', 'High-level overview of the current repository.', 'Terminal summary'],
+            ['plan', 'Break a goal into executable phases.', 'plan.md'],
+            ['pr', 'Open a pull request for the current branch.', 'GitHub PR'],
+            ['prd', 'Turn conversation context into a PRD.', 'prd.md'],
+            ['review', 'Review a file, diff, or document with fresh eyes and surface issues.', 'Terminal review with severity levels'],
+            ['write-skill', 'Create a new agent skill.', 'New skill directory'],
+          ],
+        },
+        { type: 'text', value: 'Last updated: 25 April 2026' },
+      ],
+    },
+    {
       slug: 'giving-my-agent-a-voice',
       headline: 'Giving my agent a voice',
       body: 'Built a skill for Pi called Explain. I pass it anything, a code snippet, a file, an agent plan, and it explains the thing in a simple paragraph.\nThe fun part is it uses the ElevenLabs API to read that paragraph aloud.',
