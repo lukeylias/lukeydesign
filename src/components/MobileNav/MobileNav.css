@@ -20,14 +20,15 @@
 }
 
 .mobile-nav__toggle {
-  background: none;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-pill);
   width: 44px;
   height: 44px;
   cursor: pointer;
   font-family: var(--font-heading);
   font-size: 18px;
+  color: var(--color-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,26 +83,27 @@
 
 .mobile-overlay__chat-btn {
   width: 100%;
-  border: 2px solid;
-  border-color: var(--win98-btn-highlight) var(--win98-btn-shadow) var(--win98-btn-shadow) var(--win98-btn-highlight);
-  background: var(--win98-bg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   padding: 8px 12px;
   font-family: var(--font-heading);
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
   text-align: left;
-  color: var(--color-text);
+  color: var(--color-text-secondary);
   min-height: 44px;
   display: flex;
   align-items: center;
+  border-radius: var(--border-radius-pill);
 }
 
 .mobile-overlay__chat-btn:hover {
-  background: #d4d0c8;
+  background: var(--color-surface-elevated);
 }
 
 .mobile-overlay__chat-btn:active {
-  border-color: var(--win98-btn-shadow) var(--win98-btn-highlight) var(--win98-btn-highlight) var(--win98-btn-shadow);
+  filter: brightness(1.1);
 }
 
 @media (max-width: 768px) {

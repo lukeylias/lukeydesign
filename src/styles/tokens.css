@@ -4,19 +4,17 @@
 
 :root {
   /* Colours */
-  --color-bg: #FFFFFF;
-  --color-text: #000000;
-  --color-link: #0000FF;
-  --color-border: #000000;
-  --color-border-light: #C0C0C0;
-
-  /* Win98 chrome */
-  --win98-titlebar: #000080;
-  --win98-titlebar-text: #FFFFFF;
-  --win98-bg: #C0C0C0;
-  --win98-btn-highlight: #FFFFFF;
-  --win98-btn-shadow: #808080;
-  --win98-btn-dark-shadow: #000000;
+  --color-bg: #1a1918;
+  --color-text: #faf9f6;
+  --color-link: #6b9eff;
+  --color-link-hover: #9dbfff;
+  --color-border: rgba(226, 226, 226, 0.35);
+  --color-text-secondary: #afaeac;
+  --color-text-tertiary: #868584;
+  --color-surface: #2e2e2d;
+  --color-surface-elevated: #3a3a39;
+  --color-error-bg: #3a2020;
+  --color-error-text: #f5c6c6;
 
   /* Typography */
   --font-heading: 'JetBrains Mono', monospace;
@@ -34,7 +32,9 @@
 
   /* Layout */
   --sidebar-width: 232px;
-  --border-radius: 0;
+  --border-radius: 8px;
+  --border-radius-card: 12px;
+  --border-radius-pill: 50px;
   --grid-columns: 5;
   --modal-padding-x: 60px;
 }

@@ -36,12 +36,10 @@
   flex-direction: column;
   max-width: min(90vw, 1200px);
   max-height: 90vh;
-  border-radius: var(--border-radius);
-  box-shadow:
-    inset -1px -1px 0 var(--win98-btn-shadow),
-    inset 1px 1px 0 var(--win98-btn-highlight),
-    2px 2px 8px rgba(0, 0, 0, 0.3);
-  background: var(--win98-bg);
+  border-radius: var(--border-radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  background: var(--color-surface-elevated);
   overflow: hidden;
 }
 
@@ -49,8 +47,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--win98-titlebar);
-  color: var(--win98-titlebar-text);
+  background: var(--color-surface);
+  color: var(--color-text);
   padding: 2px 4px;
   min-height: 24px;
   flex-shrink: 0;
@@ -68,7 +66,7 @@
 }
 
 .lightbox__body {
-  background: var(--color-bg);
+  background: var(--color-surface-elevated);
   display: flex;
   align-items: center;
   justify-content: center;
