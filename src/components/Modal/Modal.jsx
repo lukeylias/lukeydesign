@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import MediaBlock from '../MediaBlock/MediaBlock';
+import appRegistry from '../apps/index';
 import './Modal.css';
 
 /**
@@ -24,6 +25,9 @@ function groupModalContent(modalContent) {
     if (block.type === 'image') {
       flushText();
       segments.push({ type: 'media', block, index: imageIndex++ });
+    } else if (block.type === 'app') {
+      flushText();
+      segments.push({ type: 'app', block });
     } else {
       textGroup.push(block);
     }
@@ -40,7 +44,7 @@ function renderTextBlock(block, i, item) {
     return (
       <p key={i}>
         <a href={block.href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-          {block.label || block.href}{isExternal && ' ↗'}
+          {block.label || block.href}{isExternal && !block.label?.includes('↗') && ' ↗'}
         </a>
       </p>
     );
@@ -104,6 +108,8 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
     if (item.modalContent) {
       const { segments, imageCountFromContent } = groupModalContent(item.modalContent);
 
+      const isAppOnly = segments.length === 1 && segments[0].type === 'app';
+
       const contentElements = segments.map((seg, i) => {
         if (seg.type === 'text-group') {
           return (
@@ -111,6 +117,10 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
               {seg.blocks.map((block, j) => renderTextBlock(block, j, item))}
             </div>
           );
+        }
+        if (seg.type === 'app') {
+          const AppComponent = appRegistry[seg.block.app];
+          return AppComponent ? <AppComponent key={`app-${i}`} /> : null;
         }
         // media segment
         return (
@@ -138,7 +148,7 @@ export default function Modal({ isOpen, activeItem, isExpanded, onClose, onToggl
 
       bodyContent = (
         <>
-          <div className="modal__body-text"><h2>{item.headline}</h2></div>
+          {!isAppOnly && <div className="modal__body-text"><h2>{item.headline}</h2></div>}
           {contentElements}
           {mediaElements}
         </>

@@ -67,6 +67,14 @@ export default {
       ],
     },
     {
+      slug: 'image-compressor',
+      headline: 'Image Compressor',
+      body: 'A fully client-side image compressor. Drop an image, pick a format, resize if needed, and download the result — no server involved.',
+      modalContent: [
+        { type: 'app', app: 'image-compressor' },
+      ],
+    },
+    {
       slug: 'sa11y',
       headline: 'Sa11y',
       body: 'A web accessibility tool that translates WCAG guidelines into plain language. Built for non-experts who find standard auditing tools intimidating.',

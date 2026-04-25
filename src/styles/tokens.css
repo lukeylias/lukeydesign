@@ -36,6 +36,7 @@
   --sidebar-width: 232px;
   --border-radius: 0;
   --grid-columns: 5;
+  --modal-padding-x: 60px;
 }
 
 /* Responsive column overrides */
