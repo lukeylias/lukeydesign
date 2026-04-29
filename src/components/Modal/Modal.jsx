@@ -39,6 +39,8 @@ function groupModalContent(modalContent) {
 
 function renderTextBlock(block, i, item) {
   if (block.type === 'text') return <p key={i}>{block.value}</p>;
+  if (block.type === 'heading') return <h3 key={i} className="modal__section-heading">{block.value}</h3>;
+  if (block.type === 'divider') return <hr key={i} className="modal__divider" />;
   if (block.type === 'link') {
     const isExternal = block.href && (block.href.startsWith('http') || block.href.startsWith('//'));
     return (

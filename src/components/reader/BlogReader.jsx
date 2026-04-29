@@ -25,6 +25,10 @@ function renderBlock(block, index) {
     return <h2 key={`heading-${index}`} className="reader-section-heading">{block.value}</h2>;
   }
 
+  if (block.type === 'divider') {
+    return <hr key={`divider-${index}`} className="reader-divider" />;
+  }
+
   if (block.type === 'table') {
     return (
       <div key={`table-${index}`} className="reader-table-wrap">

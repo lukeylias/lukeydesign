@@ -161,6 +161,21 @@
   white-space: nowrap;
 }
 
+.modal__section-heading {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-1);
+  color: var(--color-text);
+}
+
+.modal__divider {
+  border: none;
+  border-top: 1px solid var(--color-border-soft);
+  margin: var(--space-2) 0;
+}
+
 .modal__body code {
   font-family: var(--font-heading);
   font-size: 13px;
