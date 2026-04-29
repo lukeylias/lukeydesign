@@ -1,22 +1,60 @@
 /* ========================================
-   Site Layout
+   App Shell Layout
    ======================================== */
 
-.site-layout {
+.app-shell {
   display: flex;
   min-height: 100vh;
-  max-width: 1680px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
 .main-content {
   flex: 1;
   min-width: 0;
-  padding: var(--space-4) var(--space-2) var(--space-2);
+  padding: 42px 56px;
 }
 
-@media (max-width: 768px) {
+.view-header {
+  margin-bottom: var(--space-3);
+}
+
+.view-header h1 {
+  font-size: clamp(28px, 3.3vw, 34px);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.feed-view .view-header h1,
+.about-view .view-header h1,
+.stack-view .view-header h1 {
+  color: var(--color-accent);
+}
+
+.prose-block {
+  max-width: 68ch;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.prose-block p {
+  color: var(--color-text-secondary);
+}
+
+.stack-view .view-header h1 {
+  color: var(--color-accent);
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
   .main-content {
-    padding-top: calc(48px + var(--space-2));
+    padding: 24px var(--space-2);
+  }
+
+  .view-header h1 {
+    font-size: 28px;
   }
 }

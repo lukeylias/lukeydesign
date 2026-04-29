@@ -1,0 +1,98 @@
+.experiment-chrome {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--border-radius-card);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.experiment-chrome__bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border-soft);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.experiment-chrome__dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.experiment-chrome__dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-tertiary);
+}
+
+.experiment-chrome__dots span:nth-child(1) {
+  background: #ff5f57;
+}
+
+.experiment-chrome__dots span:nth-child(2) {
+  background: #febc2e;
+}
+
+.experiment-chrome__dots span:nth-child(3) {
+  background: #28c840;
+}
+
+.experiment-chrome__title,
+.experiment-chrome__meta {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.experiment-chrome__title {
+  color: var(--color-text);
+}
+
+.experiment-chrome__body {
+  padding: var(--space-1);
+}
+
+.experiment-chrome__footer {
+  border-top: 1px solid var(--color-border-soft);
+  padding: 8px 12px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+.experiment-chrome__footer a {
+  text-decoration: none;
+}
+
+.experiment-card__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0;
+  gap: var(--space-2);
+}
+
+.experiment-card__open-link {
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.experiment-view__back {
+  display: inline-flex;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.experiment-view__summary {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.experiment-chrome--compact .experiment-chrome__meta {
+  display: none;
+}

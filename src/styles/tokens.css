@@ -5,22 +5,29 @@
 :root {
   /* Colours */
   --color-bg: #1a1918;
-  --color-text: #faf9f6;
-  --color-link: #6b9eff;
-  --color-link-hover: #9dbfff;
-  --color-border: rgba(226, 226, 226, 0.35);
-  --color-text-secondary: #afaeac;
-  --color-text-tertiary: #868584;
-  --color-surface: #2e2e2d;
-  --color-surface-elevated: #3a3a39;
+  --color-surface: #222120;
+  --color-surface-elevated: #2a2928;
+  --color-text: #f4f2ee;
+  --color-text-secondary: #e8e3d9;
+  --color-text-tertiary: #908a81;
+  --color-link: #f2a154;
+  --color-link-hover: #f7b97f;
+  --color-accent: #f2a154;
+  --color-border: rgba(244, 242, 238, 0.18);
+  --color-border-soft: rgba(244, 242, 238, 0.1);
+  --color-accent-soft: rgba(242, 161, 84, 0.16);
   --color-error-bg: #3a2020;
   --color-error-text: #f5c6c6;
 
   /* Typography */
-  --font-heading: 'JetBrains Mono', monospace;
-  --font-body: 'JetBrains Mono', monospace;
-  --font-size-body: 14px;
-  --font-size-label: 14px;
+  --font-sans: 'Inter', sans-serif;
+  --font-heading-sans: 'Inter Tight', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: var(--font-heading-sans);
+  --font-body: var(--font-sans);
+  --font-ui: var(--font-mono);
+  --font-size-body: 16px;
+  --font-size-label: 12px;
 
   /* Spacing (8px base unit) */
   --space-1: 8px;
@@ -31,7 +38,7 @@
   --space-6: 48px;
 
   /* Layout */
-  --sidebar-width: 232px;
+  --rail-width: 232px;
   --border-radius: 8px;
   --border-radius-card: 12px;
   --border-radius-pill: 50px;
