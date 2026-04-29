@@ -1,0 +1,130 @@
+.feed-list {
+  list-style: none;
+  display: grid;
+  gap: 0;
+  max-width: 760px;
+}
+
+.feed-item {
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.feed-item:first-child {
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.feed-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 22px 0;
+  transition: background-color 0.15s ease;
+}
+
+.feed-card {
+  border: 0;
+  border-radius: 0;
+  padding: 0 14px;
+}
+
+.feed-card-link:hover,
+.feed-card-link:focus-visible {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.feed-eyebrow {
+  color: var(--color-text-tertiary);
+  margin-bottom: 8px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.feed-title {
+  color: var(--color-text);
+  margin-bottom: 8px;
+  font-family: var(--font-heading);
+  font-size: clamp(24px, 2.8vw, 30px);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+.feed-date {
+  color: var(--color-text-tertiary);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+
+.feed-summary {
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+.feed-card-experiment {
+  padding: 14px;
+  margin: 16px 0;
+}
+
+.feed-card-experiment .feed-summary {
+  margin-bottom: 20px;
+}
+
+.metrics-strip {
+  margin-top: 14px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: transparent;
+}
+
+.metrics-strip__item {
+  padding: 10px;
+  border-right: 1px solid var(--color-border-soft);
+}
+
+.metrics-strip__item:last-child {
+  border-right: 0;
+}
+
+.metrics-strip__value {
+  font-family: var(--font-heading);
+  color: var(--color-accent);
+  font-size: 16px;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.metrics-strip__label {
+  font-family: var(--font-ui);
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.feed-empty {
+  color: var(--color-text-secondary);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius-card);
+  padding: var(--space-2);
+}
+
+@media (max-width: 980px) {
+  .feed-card-link {
+    padding: 18px 0;
+  }
+
+  .feed-title {
+    font-size: 24px;
+  }
+
+  .feed-summary {
+    font-size: 15px;
+  }
+}

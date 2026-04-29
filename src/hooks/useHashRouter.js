@@ -1,33 +1,32 @@
-import { useState, useEffect, useCallback } from 'react';
-
-function parseHash() {
-  const hash = location.hash;
-  if (!hash || !hash.startsWith('#/')) return null;
-  const parts = hash.substring(2).split('/');
-  if (parts.length < 2) return null;
-  return { section: parts[0], slug: parts.slice(1).join('/') };
-}
+import { useEffect, useMemo, useState } from 'react';
+import { parseRoute } from '../utils/routes';
 
 export default function useHashRouter() {
-  const [route, setRoute] = useState(() => parseHash());
+  const [hash, setHash] = useState(() => window.location.hash || '#/');
 
   useEffect(() => {
-    function onPopState() {
-      setRoute(parseHash());
+    if (!window.location.hash || window.location.hash === '#') {
+      window.location.replace('#/');
     }
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
+
+    function onHashChange() {
+      const nextHash = window.location.hash || '#/';
+      if (window.history.state?.piInApp !== true) {
+        window.history.replaceState({ ...(window.history.state || {}), piInApp: true }, '', nextHash);
+      }
+      setHash(nextHash);
+    }
+
+    if (window.history.state?.piInApp !== true) {
+      const currentHash = window.location.hash || '#/';
+      window.history.replaceState({ ...(window.history.state || {}), piInApp: true }, '', currentHash);
+    }
+
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  const setHash = useCallback((section, slug) => {
-    history.pushState({ modal: true, section, slug }, '', `#/${section}/${slug}`);
-    setRoute({ section, slug });
-  }, []);
+  const route = useMemo(() => parseRoute(hash), [hash]);
 
-  const clearHash = useCallback(() => {
-    history.pushState({}, '', location.pathname);
-    setRoute(null);
-  }, []);
-
-  return { route, setHash, clearHash };
+  return { route };
 }
