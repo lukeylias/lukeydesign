@@ -176,7 +176,7 @@ export default function ImageCompressor() {
         >
           <span className="compressor__dropzone-icon">📁</span>
           <span className="compressor__dropzone-text">Drop an image here or click to browse</span>
-          <span className="compressor__dropzone-hint">JPEG, PNG, WebP, AVIF — up to 80 MB</span>
+          <span className="compressor__dropzone-hint">JPEG, PNG, WebP, AVIF - up to 80 MB</span>
         </div>
         <input
           ref={fileInputRef}
@@ -202,8 +202,8 @@ export default function ImageCompressor() {
       <div className="compressor__preview">
         <img className="compressor__preview-image" src={preview} alt="Preview" />
         <span className="compressor__file-info">
-          {file.name} — {formatBytes(file.size)}
-          {imgDimensions && ` — ${imgDimensions.width}×${imgDimensions.height}`}
+          {file.name} - {formatBytes(file.size)}
+          {imgDimensions && ` - ${imgDimensions.width}×${imgDimensions.height}`}
         </span>
       </div>
 
@@ -283,7 +283,7 @@ export default function ImageCompressor() {
           </div>
           {result.larger && (
             <p className="compressor__note">
-              Output is larger than the original — this can happen with PNG or already-optimised files.
+              Output is larger than the original. This can happen with PNG or already-optimised files.
             </p>
           )}
           <div className="compressor__actions">
