@@ -5,7 +5,6 @@ const NAV_ITEMS = [
   { label: '~/feed', href: '#/' },
   { label: 'blog/', href: '#/blog' },
   { label: 'case-studies/', href: '#/case-studies' },
-  { label: 'experiments/', href: '#/experiments' },
   { label: 'stack/', href: '#/stack' },
   { label: 'about/', href: '#/about' },
 ];
@@ -21,11 +20,6 @@ function isActive(route, href) {
   if (href === '#/case-studies') {
     return (route.type === 'feed' && route.filter === 'case-studies')
       || ((route.type === 'reader' || route.type === 'reader-not-found') && route.entryType === 'case-studies');
-  }
-  if (href === '#/experiments') {
-    return (route.type === 'feed' && route.filter === 'experiment')
-      || route.type === 'experiment'
-      || route.type === 'experiment-not-found';
   }
   if (href === '#/stack') {
     return route.type === 'stack-list'

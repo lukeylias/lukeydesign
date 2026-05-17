@@ -4,7 +4,7 @@ import work from './work';
 import stack from './stack';
 import {
   entries,
-  blogAndExperimentEntries,
+  blogEntries,
   caseStudyEntries,
   stackEntries,
 } from './entries';
@@ -16,7 +16,7 @@ export default sections;
 export { about, mainFeed, work, stack };
 export {
   entries,
-  blogAndExperimentEntries,
+  blogEntries,
   caseStudyEntries,
   stackEntries,
 };

@@ -3,33 +3,32 @@ import work from './work';
 import stack from './stack';
 import { sortEntriesByDate } from '../utils/entries';
 
-const BLOG_AND_EXPERIMENT_DATES = {
-  skills: '2026-04-25',
-  'giving-my-agent-a-voice': '2026-04-24',
-  'claude-design-isnt-replacing-designers': '2026-04-23',
-  'image-compressor': '2026-04-22',
-  sa11y: '2026-04-21',
-  a11ycat: '2026-04-20',
-  'figma-plugins': '2026-04-19',
+const BLOG_DATES = {
+  skills: '2026-05-12',
+  'giving-my-agent-a-voice': '2026-04-28',
+  'claude-design-isnt-replacing-designers': '2026-03-31',
+  sa11y: '2026-03-10',
+  a11ycat: '2026-02-14',
+  'figma-plugins': '2025-12-22',
 };
 
 const CASE_STUDY_DATES = {
-  'iwhi-funnel-redesign': '2026-03-18',
-  'offer-management': '2026-03-15',
-  'experimentation-at-nib': '2026-03-12',
-  'accessibility-at-nib': '2026-03-09',
-  'secure-messaging': '2026-03-05',
-  'stacks-design-system': '2026-03-01',
+  'iwhi-funnel-redesign': '2026-01-19',
+  'offer-management': '2026-04-17',
+  'experimentation-at-nib': '2025-12-11',
+  'accessibility-at-nib': '2026-02-26',
+  'secure-messaging': '2025-02-12',
+  'stacks-design-system': '2025-01-24',
 };
 
 const STACK_DATES = {
-  'magic-patterns': '2026-02-27',
-  pi: '2026-02-24',
-  opencode: '2026-02-21',
-  claude: '2026-02-18',
-  granola: '2026-02-14',
-  'wispr-flow': '2026-02-10',
-  figma: '2026-02-06',
+  'magic-patterns': '2026-05-04',
+  pi: '2026-04-06',
+  opencode: '2026-03-18',
+  claude: '2026-02-02',
+  granola: '2026-01-08',
+  'wispr-flow': '2025-12-30',
+  figma: '2025-12-03',
 };
 
 const CASE_STUDY_METRICS = {
@@ -81,19 +80,19 @@ const CASE_STUDY_META = {
 };
 
 function normaliseMainFeedItem(item) {
-  let type = 'blog';
-  if (item.slug === 'image-compressor') type = 'experiment';
+  const type = 'blog';
 
   return {
     type,
-    typeLabel: type === 'experiment' ? 'Experiment' : 'Blog',
+    typeLabel: 'Blog',
     slug: item.slug,
     title: item.headline,
     summary: item.body,
-    date: BLOG_AND_EXPERIMENT_DATES[item.slug] || '2026-04-01',
-    href: type === 'experiment' ? `#/experiments/${item.slug}` : `#/blog/${item.slug}`,
+    date: BLOG_DATES[item.slug] || '2026-04-01',
+    href: `#/blog/${item.slug}`,
     modalContent: item.modalContent,
-    sourceHref: item.slug === 'image-compressor' ? 'https://github.com/lukeylias/lukeydesign' : null,
+    headerMedia: item.headerMedia || null,
+    sourceHref: null,
   };
 }
 
@@ -107,6 +106,7 @@ function normaliseWorkItem(item) {
     date: CASE_STUDY_DATES[item.slug] || '2026-03-01',
     href: `#/case-studies/${item.slug}`,
     modalContent: item.modalContent,
+    headerMedia: item.headerMedia || null,
     metrics: CASE_STUDY_METRICS[item.slug] || null,
     role: CASE_STUDY_META[item.slug]?.role || null,
     duration: CASE_STUDY_META[item.slug]?.duration || null,
@@ -124,22 +124,23 @@ function normaliseStackItem(item) {
     date: STACK_DATES[item.slug] || '2026-02-01',
     href: `#/stack/${item.slug}`,
     modalContent: item.modalContent,
+    headerMedia: item.headerMedia || null,
   };
 }
 
-const blogAndExperimentEntries = mainFeed.items.map(normaliseMainFeedItem);
+const blogEntries = mainFeed.items.map(normaliseMainFeedItem);
 const caseStudyEntries = work.items.map(normaliseWorkItem);
 const stackEntries = stack.items.map(normaliseStackItem);
 
 const entries = sortEntriesByDate([
-  ...blogAndExperimentEntries,
+  ...blogEntries,
   ...caseStudyEntries,
   ...stackEntries,
 ]);
 
 export {
   entries,
-  blogAndExperimentEntries,
+  blogEntries,
   caseStudyEntries,
   stackEntries,
   sortEntriesByDate,
