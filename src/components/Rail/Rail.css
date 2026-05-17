@@ -75,7 +75,8 @@
   background: transparent;
   color: var(--color-text);
   border-radius: var(--border-radius);
-  padding: 6px 10px;
+  min-height: 44px;
+  padding: 10px 12px;
   font-family: var(--font-ui);
   font-size: 12px;
 }
@@ -117,14 +118,32 @@
     padding: 10px var(--space-2);
   }
 
-  .rail-nav-mobile {
-    display: flex;
-    gap: var(--space-2);
-    overflow-x: auto;
-    padding-bottom: 2px;
+  .rail-mobile-nav-wrap {
+    border-top: 1px solid var(--color-border-soft);
+    padding-top: 8px;
   }
 
-  .rail-nav-mobile::-webkit-scrollbar {
-    height: 4px;
+  .rail-nav-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .rail-nav-mobile li {
+    width: 100%;
+  }
+
+  .rail-nav-mobile a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    width: 100%;
+  }
+
+  .rail-nav-mobile a[aria-current='page'] {
+    background: color-mix(in oklab, var(--color-accent) 14%, transparent);
   }
 }

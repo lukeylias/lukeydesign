@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import BlogReader from '../reader/BlogReader';
 import CaseStudyReader from '../reader/CaseStudyReader';
 import StackReader from '../reader/StackReader';
+import MediaBlock from '../MediaBlock/MediaBlock';
 import { getCanonicalRouteForEntryType, navigateBackOrFallback } from '../../utils/navigation';
 import '../reader/reader.css';
 
@@ -26,6 +27,11 @@ export default function ReaderView({ route }) {
       <a href={fallbackHref} className="reader-back" onClick={onBackClick}>
         ← Back
       </a>
+      {route.entry.headerMedia && (
+        <div className="reader-header-media">
+          <MediaBlock media={route.entry.headerMedia} context="body" />
+        </div>
+      )}
       <header className="view-header">
         <h1>{route.entry.title}</h1>
       </header>

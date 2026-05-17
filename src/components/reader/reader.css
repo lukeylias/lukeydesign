@@ -34,6 +34,14 @@
   color: var(--color-text-secondary);
 }
 
+.reader-header-media {
+  margin-bottom: var(--space-3);
+}
+
+.reader-header-media .media-block--body {
+  margin: 0;
+}
+
 .reader-content {
   display: grid;
   gap: 14px;
