@@ -1,4 +1,5 @@
 import { findEntryByTypeAndSlug } from '../data';
+import { findSideProject, findWorkProject } from '../data/portfolio';
 
 function normaliseHash(hashValue) {
   if (!hashValue || hashValue === '#') return '#/';
@@ -18,13 +19,23 @@ export function parseRoute(hashValue) {
   const segments = toSegments(hash);
 
   if (segments.length === 0) {
-    return { type: 'feed', filter: 'all', hash: '#/' };
+    return { type: 'home', hash: '#/' };
   }
 
   if (segments.length === 1) {
-    if (segments[0] === 'blog') return { type: 'feed', filter: 'blog', hash: '#/blog' };
-    if (segments[0] === 'case-studies') return { type: 'feed', filter: 'case-studies', hash: '#/case-studies' };
-    if (segments[0] === 'experiments') return { type: 'feed', filter: 'experiment', hash: '#/experiments' };
+    if (segments[0] === 'work' || segments[0] === 'case-studies') {
+      return { type: 'home', hash: '#/' };
+    }
+    if (segments[0] === 'blog') {
+      return { type: 'notes', hash: '#/notes' };
+    }
+    if (segments[0] === 'notes') {
+      return { type: 'notes', hash: '#/notes' };
+    }
+    if (segments[0] === 'side-projects') {
+      return { type: 'side-project-index', hash };
+    }
+    if (segments[0] === 'experiments') return { type: 'about', hash };
     if (segments[0] === 'stack') return { type: 'stack-list', hash: '#/stack' };
     if (segments[0] === 'about') return { type: 'about', hash: '#/about' };
     return { type: 'not-found', hash };
@@ -34,16 +45,26 @@ export function parseRoute(hashValue) {
     const [section, ...slugParts] = segments;
     const slug = slugParts.join('/');
 
+    if (section === 'work' || section === 'case-studies') {
+      const project = findWorkProject(slug);
+      if (!project) return { type: 'not-found', hash };
+      return { type: 'work-detail', slug, project, hash };
+    }
+
+    if (section === 'side-projects') {
+      const project = findSideProject(slug);
+      if (!project) return { type: 'not-found', hash };
+      return { type: 'side-project-detail', slug, project, hash };
+    }
+
     if (section === 'blog') {
+      const sideProject = findSideProject(slug);
+      if (sideProject) {
+        return { type: 'side-project-detail', slug, project: sideProject, hash };
+      }
       const entry = findEntryByTypeAndSlug('blog', slug);
       if (!entry) return { type: 'reader-not-found', entryType: 'blog', hash, fallbackHref: '#/blog' };
       return { type: 'reader', entryType: 'blog', slug, entry, hash: `#/blog/${slug}` };
-    }
-
-    if (section === 'case-studies') {
-      const entry = findEntryByTypeAndSlug('case-studies', slug);
-      if (!entry) return { type: 'reader-not-found', entryType: 'case-studies', hash, fallbackHref: '#/case-studies' };
-      return { type: 'reader', entryType: 'case-studies', slug, entry, hash: `#/case-studies/${slug}` };
     }
 
     if (section === 'stack') {

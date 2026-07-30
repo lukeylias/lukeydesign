@@ -27,21 +27,6 @@ export default function Chatbot({ isOpen, onClose }) {
   // Track whether the initial auto-type has fired for this open session
   const hasInitTypedRef = useRef(false);
 
-  // Sync dialog open/close
-  useEffect(() => {
-    const d = dialogRef.current;
-    if (!d) return;
-    if (isOpen && !d.open) {
-      d.showModal();
-      if (!hasInitTypedRef.current && messages.length === 0 && welcomeVisible) {
-        hasInitTypedRef.current = true;
-        animateType(GUIDED_SEQUENCE[0]);
-      }
-    } else if (!isOpen && d.open) {
-      d.close();
-    }
-  }, [isOpen]);
-
   // Prevent native ESC — parent handles it
   useEffect(() => {
     const d = dialogRef.current;
@@ -79,6 +64,21 @@ export default function Chatbot({ isOpen, onClose }) {
     setComposerValue('');
     setTimeout(tick, 200);
   }, [sound]);
+
+  // Sync dialog open/close
+  useEffect(() => {
+    const d = dialogRef.current;
+    if (!d) return;
+    if (isOpen && !d.open) {
+      d.showModal();
+      if (!hasInitTypedRef.current && messages.length === 0 && welcomeVisible) {
+        hasInitTypedRef.current = true;
+        animateType(GUIDED_SEQUENCE[0]);
+      }
+    } else if (!isOpen && d.open) {
+      d.close();
+    }
+  }, [animateType, isOpen, messages.length, welcomeVisible]);
 
   // Submit the current guided prompt
   const submitPrompt = useCallback(async (prompt) => {

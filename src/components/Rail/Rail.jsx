@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import './Rail.css';
 
 const NAV_ITEMS = [
@@ -43,10 +43,6 @@ export default function Rail({ route }) {
     () => NAV_ITEMS.map((item) => ({ ...item, active: isActive(route, item.href) })),
     [route]
   );
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [route.hash]);
 
   function onMobileNavKeyDown(event) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;

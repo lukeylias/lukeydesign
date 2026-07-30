@@ -1,58 +1,31 @@
-/* ========================================
-   Design Tokens (from v2.css :root)
-   ======================================== */
-
 :root {
-  /* Colours */
-  --color-bg: #1a1918;
-  --color-surface: #222120;
-  --color-surface-elevated: #2a2928;
-  --color-text: #f4f2ee;
-  --color-text-secondary: #e8e3d9;
-  --color-text-tertiary: #908a81;
-  --color-link: #f2a154;
-  --color-link-hover: #f7b97f;
-  --color-accent: #f2a154;
-  --color-border: rgba(244, 242, 238, 0.18);
-  --color-border-soft: rgba(244, 242, 238, 0.1);
-  --color-accent-soft: rgba(242, 161, 84, 0.16);
-  --color-error-bg: #3a2020;
-  --color-error-text: #f5c6c6;
-
-  /* Typography */
-  --font-sans: 'Nunito Sans', sans-serif;
-  --font-heading-sans: 'Inter Tight', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-heading: var(--font-heading-sans);
+  color-scheme: light;
+  --color-bg: #f8f8f6;
+  --color-surface: #efefec;
+  --color-surface-elevated: #ffffff;
+  --color-text: #161616;
+  --color-text-secondary: #595957;
+  --color-text-tertiary: #6f6f6c;
+  --color-link: #161616;
+  --color-link-hover: #135bf2;
+  --color-accent: #135bf2;
+  --color-border: #d8d8d4;
+  --color-border-soft: #e7e7e3;
+  --color-accent-soft: #e6edff;
+  --color-error-bg: #f8e7e5;
+  --color-error-text: #8a2420;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-heading: var(--font-sans);
   --font-body: var(--font-sans);
-  --font-ui: var(--font-mono);
+  --font-ui: var(--font-sans);
   --font-size-body: 18px;
   --font-size-label: 12px;
-
-  /* Spacing (8px base unit) */
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
   --space-4: 32px;
   --space-5: 40px;
   --space-6: 48px;
-
-  /* Layout */
-  --rail-width: 232px;
-  --border-radius: 8px;
-  --border-radius-card: 12px;
-  --border-radius-pill: 50px;
-  --grid-columns: 5;
-  --modal-padding-x: 60px;
-}
-
-/* Responsive column overrides */
-@media (max-width: 1024px) {
-  :root { --grid-columns: 3; }
-}
-@media (max-width: 768px) {
-  :root { --grid-columns: 2; }
-}
-@media (max-width: 480px) {
-  :root { --grid-columns: 1; }
+  --border-radius: 0;
+  --border-radius-card: 0;
 }

@@ -1,5 +1,5 @@
 export function getCanonicalRouteForEntryType(entryType) {
-  if (entryType === 'blog') return '#/blog';
+  if (entryType === 'blog') return '#/notes';
   if (entryType === 'case-studies') return '#/case-studies';
   if (entryType === 'stack') return '#/stack';
   return '#/';
