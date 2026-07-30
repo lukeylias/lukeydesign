@@ -23,7 +23,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body.modal-open {
+html.menu-open,
+body.modal-open,
+body.menu-open {
   overflow: hidden;
 }
 

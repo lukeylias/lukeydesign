@@ -85,6 +85,123 @@ body,
   transform-origin: left;
 }
 
+.site-menu-toggle,
+.site-menu-close {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 17px;
+  line-height: 1.55;
+  cursor: pointer;
+}
+
+.site-menu-toggle {
+  display: none;
+}
+
+.site-menu-toggle:hover,
+.site-menu-close:hover {
+  color: var(--color-text);
+}
+
+.site-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  background: var(--color-bg);
+  animation: menu-overlay-enter 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.site-menu-overlay__inner {
+  width: min(calc(100% - 32px), 52rem);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 32px 0 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-menu-overlay__top {
+  min-height: 48px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.site-menu-overlay__brand {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+.site-menu-overlay__brand img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.site-menu-overlay__nav {
+  margin: auto 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.site-menu-overlay__nav a {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: clamp(30px, 9vw, 40px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  opacity: 0;
+  animation: menu-link-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.site-menu-overlay__nav a:nth-child(1) {
+  animation-delay: 80ms;
+}
+
+.site-menu-overlay__nav a:nth-child(2) {
+  animation-delay: 130ms;
+}
+
+.site-menu-overlay__nav a:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.site-menu-overlay__nav a:hover,
+.site-menu-overlay__nav a[aria-current="page"] {
+  color: var(--color-accent);
+}
+
+.site-menu-overlay--closing {
+  pointer-events: none;
+  animation: menu-overlay-exit 260ms ease both;
+}
+
+.site-menu-overlay--closing .site-menu-overlay__nav a {
+  animation: menu-link-exit 180ms ease both;
+}
+
+.site-menu-overlay--closing .site-menu-overlay__nav a:nth-child(1) {
+  animation-delay: 60ms;
+}
+
+.site-menu-overlay--closing .site-menu-overlay__nav a:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.site-menu-overlay--closing .site-menu-overlay__nav a:nth-child(3) {
+  animation-delay: 0ms;
+}
+
 .content-placeholder {
   color: var(--color-text-tertiary);
   font-size: 12px;
@@ -105,6 +222,50 @@ body,
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes menu-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes menu-link-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menu-overlay-exit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes menu-link-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
   }
 }
 
@@ -1019,7 +1180,7 @@ a:hover .link-arrow {
 
 @media (max-width: 700px) {
   .site-shell {
-    width: min(calc(100% - 36px), 52rem);
+    width: min(calc(100% - 32px), 52rem);
   }
 
   .site-header {
@@ -1039,11 +1200,14 @@ a:hover .link-arrow {
   }
 
   .site-nav {
-    gap: 18px;
+    display: none;
   }
 
-  .site-nav a {
-    font-size: 17px;
+  .site-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0;
+    animation: region-enter 760ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
   }
 
   .home-hero {
@@ -1070,6 +1234,12 @@ a:hover .link-arrow {
   .section-heading-row h2,
   .portfolio-lists h2 {
     font-size: 24px;
+  }
+
+  .portfolio-lists h2,
+  .writing-section .section-heading-row,
+  .notes-page__header {
+    padding-inline: 16px;
   }
 
   .selected-work__grid {
@@ -1112,8 +1282,13 @@ a:hover .link-arrow {
     gap: 24px;
   }
 
-  .more-work-list__item {
+  .more-work-list__item,
+  .side-project-list__item {
     min-height: 72px;
+    margin-inline: 0;
+    padding-right: 16px;
+    padding-left: 16px;
+    border-radius: 16px;
   }
 
   .more-work-list__meta,
@@ -1267,10 +1442,6 @@ a:hover .link-arrow {
     gap: 8px;
   }
 
-  .site-nav {
-    gap: 12px;
-  }
-
   .site-brand {
     min-width: 56px;
   }
@@ -1280,8 +1451,14 @@ a:hover .link-arrow {
     height: 46px;
   }
 
-  .site-nav a {
+  .site-menu-toggle,
+  .site-menu-close {
     font-size: 15px;
+  }
+
+  .site-menu-overlay__nav a {
+    min-height: 76px;
+    font-size: 30px;
   }
 }
 

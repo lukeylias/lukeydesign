@@ -1,4 +1,11 @@
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import about from '../../data/about';
+import useFocusTrap from '../../hooks/useFocusTrap';
 import {
   findSideProject,
   findWorkProject,
@@ -37,9 +44,78 @@ function ProjectImage({ media, eager = false }) {
 }
 
 export function SiteHeader({ route }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuClosing, setMenuClosing] = useState(false);
+  const menuRef = useRef(null);
+  const menuTimerRef = useRef(null);
   const workActive = ['home', 'work-detail'].includes(route.type);
   const notesActive = route.type === 'notes' || (route.type === 'reader' && route.entryType === 'blog');
   const aboutActive = route.type === 'about';
+
+  useFocusTrap(menuRef, menuOpen);
+
+  const closeMenu = useCallback((destinationHref = null) => {
+    if (!menuOpen || menuClosing) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const exitDuration = prefersReducedMotion ? 0 : 260;
+
+    setMenuClosing(true);
+    window.clearTimeout(menuTimerRef.current);
+    menuTimerRef.current = window.setTimeout(() => {
+      setMenuOpen(false);
+      setMenuClosing(false);
+      if (destinationHref) window.location.hash = destinationHref;
+    }, exitDuration);
+  }, [menuClosing, menuOpen]);
+
+  const openMenu = useCallback(() => {
+    window.clearTimeout(menuTimerRef.current);
+    setMenuClosing(false);
+    setMenuOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') closeMenu();
+    }
+
+    document.documentElement.classList.add('menu-open');
+    document.body.classList.add('menu-open');
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.documentElement.classList.remove('menu-open');
+      document.body.classList.remove('menu-open');
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [closeMenu, menuOpen]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 701px)');
+
+    function closeOnDesktop(event) {
+      if (!event.matches) return;
+
+      window.clearTimeout(menuTimerRef.current);
+      setMenuClosing(false);
+      setMenuOpen(false);
+    }
+
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
+
+  useEffect(() => () => {
+    window.clearTimeout(menuTimerRef.current);
+  }, []);
+
+  function handleMenuNavigate(event) {
+    event.preventDefault();
+    closeMenu(event.currentTarget.getAttribute('href'));
+  }
 
   return (
     <header className="site-header">
@@ -51,6 +127,65 @@ export function SiteHeader({ route }) {
         <a href="#/notes" aria-current={notesActive ? 'page' : undefined}>Notes</a>
         <a href="#/about" aria-current={aboutActive ? 'page' : undefined}>About</a>
       </nav>
+      <button
+        className="site-menu-toggle"
+        type="button"
+        aria-controls="mobile-site-menu"
+        aria-expanded={menuOpen}
+        onClick={openMenu}
+      >
+        Menu
+      </button>
+
+      {menuOpen && (
+        <div
+          ref={menuRef}
+          id="mobile-site-menu"
+          className={`site-menu-overlay${menuClosing ? ' site-menu-overlay--closing' : ''}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+        >
+          <div className="site-menu-overlay__inner">
+            <div className="site-menu-overlay__top">
+              <span className="site-menu-overlay__brand" aria-hidden="true">
+                <img src="/icons/luke-portrait-logo.png" width="1024" height="1024" alt="" />
+              </span>
+              <button
+                className="site-menu-close"
+                type="button"
+                onClick={() => closeMenu()}
+              >
+                Close
+              </button>
+            </div>
+
+            <nav className="site-menu-overlay__nav" aria-label="Mobile navigation">
+              <a
+                href="#/"
+                aria-current={workActive ? 'page' : undefined}
+                onClick={handleMenuNavigate}
+              >
+                Work
+              </a>
+              <a
+                href="#/notes"
+                aria-current={notesActive ? 'page' : undefined}
+                onClick={handleMenuNavigate}
+              >
+                Notes
+              </a>
+              <a
+                href="#/about"
+                aria-current={aboutActive ? 'page' : undefined}
+                onClick={handleMenuNavigate}
+              >
+                About
+              </a>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
