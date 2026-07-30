@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 const FOCUSABLE = 'a[href], button, [tabindex]:not([tabindex="-1"])';
 

@@ -93,6 +93,15 @@ export default function ImageCompressor() {
     e.target.value = '';
   };
 
+  const downloadBlob = useCallback((blob) => {
+    const baseName = file.name.replace(/\.[^.]+$/, '');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob || blobRef.current);
+    a.download = `${baseName}-compressed.${format.ext}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, [file, format.ext]);
+
   // Compress
   const compress = useCallback(async () => {
     if (!file || !preview || !imgDimensions) return;
@@ -144,16 +153,7 @@ export default function ImageCompressor() {
     } finally {
       setCompressing(false);
     }
-  }, [file, preview, imgDimensions, format, resizeEnabled, targetWidth]);
-
-  function downloadBlob(blob) {
-    const baseName = file.name.replace(/\.[^.]+$/, '');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob || blobRef.current);
-    a.download = `${baseName}-compressed.${format.ext}`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
+  }, [downloadBlob, file, preview, imgDimensions, format, resizeEnabled, targetWidth]);
 
   // --- Render ---
 

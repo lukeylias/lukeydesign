@@ -74,7 +74,6 @@ function isDirectVideo(src) {
 /** Inline body media with Win98 chrome for images, loading state, and fade-in. */
 function BodyMedia({ media, imageIndex }) {
   const [loaded, setLoaded] = useState(false);
-  const isImage = media.type === 'image' || media.type === 'gif';
 
   if (media.type === 'video') {
     if (isDirectVideo(media.src)) {

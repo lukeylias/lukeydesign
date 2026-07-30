@@ -22,16 +22,18 @@ export default function ReaderView({ route }) {
   }
 
   return (
-    <section aria-label="Reader" className="reader-shell">
+    <article className="reader-shell" aria-labelledby="reader-title">
       <a href={fallbackHref} className="reader-back" onClick={onBackClick}>
-        ← Back
+        <span className="reader-back__icon" aria-hidden="true">
+          <img src="/icons/arrow-right.svg" width="20" height="20" alt="" />
+        </span>
+        Notes
       </a>
-      <header className="view-header">
-        <h1>{route.entry.title}</h1>
+      <header className="reader-header">
+        <h1 id="reader-title">{route.entry.title}</h1>
+        <p className="reader-summary">{route.entry.summary}</p>
       </header>
-      <p className="reader-meta">{route.entry.typeLabel}</p>
-      <p className="reader-summary">{route.entry.summary}</p>
       <ReaderBody route={route} />
-    </section>
+    </article>
   );
 }
