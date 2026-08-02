@@ -114,7 +114,7 @@ const conversationSteps = [
   {
     prompt: "How can I contact you?",
     response: `<p>Easiest way is email: <a href="mailto:lukeylias@gmail.com">lukeylias@gmail.com</a></p>
-<p>I'm also on <a href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noopener noreferrer">LinkedIn</a> and <a href="https://github.com/lukeylias" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>`,
+<p>I'm also on <a class="external-link" href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noopener noreferrer">LinkedIn<img class="external-link-icon" src="/icons/arrow-up-right.svg" width="16" height="16" alt="" aria-hidden="true"></a> and <a class="external-link" href="https://github.com/lukeylias" target="_blank" rel="noopener noreferrer">GitHub<img class="external-link-icon" src="/icons/arrow-up-right.svg" width="16" height="16" alt="" aria-hidden="true"></a>.</p>`,
     nextPrompts: [],
   },
 ];

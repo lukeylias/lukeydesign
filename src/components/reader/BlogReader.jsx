@@ -1,3 +1,5 @@
+import ExternalLinkIcon from '../ExternalLinkIcon';
+
 function renderBlock(block, index) {
   if (block.type === 'text') {
     return <p key={`text-${index}`}>{block.value}</p>;
@@ -6,8 +8,9 @@ function renderBlock(block, index) {
   if (block.type === 'link') {
     return (
       <p key={`link-${index}`}>
-        <a href={block.href} target="_blank" rel="noreferrer">
+        <a className="external-link" href={block.href} target="_blank" rel="noreferrer">
           {block.label || block.href}
+          <ExternalLinkIcon />
         </a>
       </p>
     );

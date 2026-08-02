@@ -1,74 +1,62 @@
-# Design QA — Mobile row padding and menu dismissal
+# Design QA — Paco-inspired option 3 implementation
 
 ## Source visual truth
 
-- Existing mobile portfolio capture: `/private/tmp/lukeydesign-dm-sans-home-mobile.png`
-- Source pixels: 375 × 2632 at device density 1.
-- The existing site defines the visual language: DM Sans typography, off-white background, black text, blue active state, restrained borders, portrait mark, and route copy.
-- The user brief requires two independent spacing layers: a 16px outer site gutter and retained internal padding inside interactive list rows.
-- Menu destinations must dismiss the overlay elegantly before the next route appears.
+- Selected ImageGen direction: `/Users/luke.ylias/.codex/generated_images/019fbf5d-b9b8-7901-9349-f6ec75e92c24/exec-16ae0703-9bfe-4d0c-ab32-bb86bc844b1a.png`.
+- Source pixels: 1487 × 1058, normalized to a 1440 × 1024 desktop comparison frame.
+- Supporting Paco desktop reference: `/private/tmp/paco-audit-01a-desktop-viewport.png`.
+- Supporting Paco mobile reference: `/private/tmp/paco-audit-03-mobile-home.png` (379 × 820).
 
-## Implementation evidence
+## Final implementation evidence
 
-- Local route: `http://127.0.0.1:5173/#/`
-- Closed and open mobile screenshots from the prior pass remain at `/private/tmp/lukeydesign-mobile-responsive-closed-viewport.jpg` and `/private/tmp/lukeydesign-mobile-menu-final.jpg`.
-- The current QA session compared closed, fully open, and 80ms exit-animation states together at 375 × 844 rendered pixels.
-- CSS viewport: 390 × 844; document client width: 375px in the normal page state and 390px while page scrolling is locked.
-- State: light mode, mobile breakpoint, route-entry, menu-entry, and menu-exit animations exercised.
+- Local route: `http://127.0.0.1:5173/#/`.
+- Desktop rendered-window capture: `/var/folders/pp/b_4hc1_s21nbqbj3tb4xwfzm0000gp/T/codex-shot-2026-08-02_20-51-45.png` (3016 × 2248, including Chrome frame and shadow around a 1440 × 1024 CSS page viewport at device density 2).
+- Desktop same-input comparison: `/var/folders/pp/b_4hc1_s21nbqbj3tb4xwfzm0000gp/T/codex-shot-2026-08-02_20-52-43.png` (3104 × 2024). The selected source and implementation are top-aligned and normalized to equal 1440 × 1024 frames.
+- Mobile rendered-page crop: `/private/tmp/lukeydesign-final-mobile.png` (780 × 1624 from a 390 × 812 CSS page viewport at device density 2).
+- Mobile same-input comparison: `/var/folders/pp/b_4hc1_s21nbqbj3tb4xwfzm0000gp/T/codex-shot-2026-08-02_20-57-30.png` (2024 × 2024). The Paco reference and implementation are both normalized to 390 × 812 viewport frames.
+- State: settled home route after the content entrance animation.
 
-## Full-view comparison evidence
+## Full-view fidelity
 
-- The mobile header retains the portrait mark and replaces the three inline links with one “Menu” control.
-- Opening the control presents a full-screen navigation layer using the existing background, typography, border, accent, and spacing tokens.
-- Selecting a destination fades and lifts the navigation labels away, then reveals the next route after the 260ms exit completes.
-- The underlying landing-page hierarchy, imagery, copy, and section rhythm are unchanged.
-- Work, Notes, and About remain the only primary navigation destinations.
+- The implementation matches the selected option's flat `#1a1a1a` surface, 640px editorial measure, 128px desktop top inset, Inter typography, Newsreader italic opening phrase, subdued labels, and text-only hierarchy.
+- Selected case studies retain the prominent two-column placement without cards, panels, imagery, persistent navigation, or oversized headings.
+- More work, Side projects, and Notes use the intended three-column index and restrained 32px gutters.
+- At 390px, the intro keeps 24px page margins while the index preserves its editorial width inside an intentional horizontal scroller, matching Paco's narrow-viewport behavior.
 
-## Focused comparison evidence
+## Focused fidelity review
 
-- Fonts and typography: DM Sans remains unchanged. The menu trigger and close control use the existing compact navigation scale; overlay destinations use a larger 30–40px route-selection scale with the same weight and letter-spacing language.
-- Spacing and layout rhythm: the site shell, Work rows, Notes rows, and Side Project rows maintain 16px left and right clearance at 320px, 390px, and 700px viewports. Every interactive row also keeps 16px left and right internal padding with a 16px radius.
-- Alignment: row labels and their related section headings resolve to x=32px — 16px site gutter plus 16px internal inset — at all three tested mobile widths.
-- Colors and visual tokens: no new palette values were introduced. The active destination uses the existing blue accent; dividers use the existing border token.
-- Image quality and asset fidelity: the existing transparent portrait logo is reused at 48px with no replacement or resampling in CSS.
-- Copy and content: navigation labels remain exactly “Work”, “Notes”, and “About”. No portfolio content was changed.
+- Fonts and typography: self-hosted Inter 400/500 and Newsreader 400 italic reproduce the sans-plus-editorial pairing. Body copy remains 16px with a 28px desktop line height and the section labels stay visually secondary.
+- Spacing and rhythm: the 640px article width, intro spacing, 56px About offset, 16px item gaps, selected-work spacing, and column gutters align closely with the chosen desktop direction.
+- Color tokens: background `#1a1a1a`, primary `#ededed`, muted gray, underlines, and low-emphasis arrows match the reference language. No blue accent, gradients, cards, shadows, or light-theme remnants remain on the landing page.
+- Assets: the selected landing direction contains no raster imagery. Existing real project media remains on detail routes, and no placeholder, CSS-drawn, or approximate image substitutes were introduced.
+- Content: Luke's name, positioning, two selected case studies, four substantial projects, three side projects, Notes, About, and Connect content are retained within the new hierarchy.
 
-## Interaction and accessibility evidence
+## Interaction and motion review
 
-- The desktop navigation is hidden at widths up to 700px and returns at 701px.
-- The menu opens from a native button with `aria-expanded` and `aria-controls`.
-- The overlay is announced as an `aria-modal` dialog with its own navigation label.
-- Focus moves to Close on open and is contained by the existing focus-trap hook.
-- Close, Escape, and destination selection all use the same 260ms dismissal sequence.
-- Selecting Notes leaves the current `#/` route in place during the visible exit state, then closes the overlay, unlocks scrolling, and navigates to `#/notes`.
-- Reduced-motion users skip the exit delay and route immediately.
-- Both `html` and `body` are scroll-locked while the overlay is open.
-- No horizontal overflow appears at 320px, 390px, 700px, or 701px.
-- Browser console errors and warnings: none.
-
-## Findings
-
-- No actionable P0, P1, or P2 differences remain.
-- P3: the focused Close outline is intentionally visible in the open-menu screenshot as keyboard-focus feedback.
+- Native hash anchors continue to drive project, About, Notes, and side-project routes.
+- The existing route choreography is preserved on `.route-view`, so the content blurs/translates in and out while persistent footer chrome remains stable. The removed top navigation no longer participates in the transition.
+- Reduced-motion preferences disable the content choreography.
+- The mobile project index is an explicitly labeled, keyboard-focusable horizontal scroller with a visible scrollbar.
+- The rendered desktop and mobile states show no visible runtime error. The local build and lint checks pass; browser-console inspection was unavailable after the Codex in-app browser connection dropped, so OS-level window capture was used for visual verification.
 
 ## Comparison history
 
-- Earlier finding: solving the outer gutter removed the interactive rows’ internal horizontal padding, so hover surfaces looked cramped.
-- Fix: retained the 16px shell gutter, restored 16px padding inside Work, Notes, and Side Project rows, and inset the corresponding headings to the same content line.
-- Post-fix evidence: shell and row bounds measure 16px from both client edges; row padding measures 16px on both sides; labels and headings align at x=32px at 320px, 390px, and 700px.
-- Earlier finding: destination selection removed the menu before its exit motion could be perceived.
-- Fix: keep the dialog mounted and scroll-locked while its overlay and labels animate out, then update the hash after 260ms.
-- Post-fix evidence: at 80ms the route remains `#/`, the overlay remains mounted with the closing class, and its computed opacity is mid-transition; after completion the route is `#/notes` and the overlay is absent.
-- Earlier finding: locking only `body` left the document scrollbar visible behind the fixed overlay.
-- Fix: lock both `html` and `body` while the menu is open.
-- Post-fix evidence: the final overlay spans the full 390px client width, maintains 16px inner gutters, and shows no underlying document scrollbar.
+- Earlier P1: the prior concepts retained oversized hero treatments, imagery, and conventional navigation that materially diverged from Paco. Fix: rebuilt the landing page as one narrow, text-first editorial document.
+- Earlier P2: the first option 3 render had a loose 52px intro gap, 24px list gaps, and pushed About below the selected frame. Fix: tightened the intro gap to 32px, item gaps to 16px, and About offset to 56px.
+- Earlier P2: the old type stack did not reproduce Paco's editorial italic opening. Fix: added self-hosted Inter and Newsreader and constrained the landing-page scale to small body and label typography.
+- Post-fix evidence: the final desktop and mobile same-input comparisons listed above show matching hierarchy, palette, typography, spacing language, and responsive behavior.
+
+## Final findings
+
+- No actionable P0, P1, or P2 visual mismatch remains.
+- P3 accepted variation: the generated desktop target exposes slightly more About body copy at the bottom edge; the implementation preserves Luke's real copy and shows the About section label at the equivalent point in the 1024px frame.
 
 ## Technical verification
 
 - `npm run lint`: passed.
 - `npm run build`: passed.
-- `git diff --check`: passed.
+- Local Vite preview: running on port 5173.
 
 ## Final result
 
-passed
+final result: passed

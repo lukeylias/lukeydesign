@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   AboutPage,
   CaseStudyPage,
@@ -8,7 +14,6 @@ import {
   SideProjectIndexPage,
   SideProjectPage,
   SiteFooter,
-  SiteHeader,
 } from './components/portfolio/Portfolio';
 import ExperimentView from './components/views/ExperimentView';
 import ReaderView from './components/views/ReaderView';
@@ -21,7 +26,7 @@ import './styles/portfolio.css';
 
 function titleForRoute(route) {
   if (route.type === 'home') return 'Luke Ylias — Product Designer';
-  if (route.type === 'notes') return 'Notes — Luke Ylias';
+  if (route.type === 'notes') return 'Writing — Luke Ylias';
   if (route.type === 'about') return 'About — Luke Ylias';
   if (route.type === 'work-detail') return `${route.project.headline} — Luke Ylias`;
   if (route.type === 'side-project-detail') return `${route.project.headline} — Luke Ylias`;
@@ -50,6 +55,9 @@ function renderPage(route) {
 export default function App() {
   const { route } = useHashRouter();
   const mainRef = useRef(null);
+  const navigationTimerRef = useRef(null);
+  const [leavingRoute, setLeavingRoute] = useState(null);
+  const routeLeaving = leavingRoute === route.hash;
 
   useEffect(() => {
     document.title = titleForRoute(route);
@@ -64,9 +72,47 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => () => {
+    window.clearTimeout(navigationTimerRef.current);
+  }, []);
+
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     mainRef.current?.focus({ preventScroll: true });
+  }, [route.hash]);
+
+  const handleRouteClick = useCallback((event) => {
+    if (
+      event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) return;
+
+    const anchor = event.target instanceof Element
+      ? event.target.closest('a[href]')
+      : null;
+    if (!anchor || anchor.closest('.site-menu-overlay')) return;
+
+    const destination = anchor.getAttribute('href');
+    if (!destination?.startsWith('#/') || destination === route.hash) return;
+
+    event.preventDefault();
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      window.location.hash = destination;
+      return;
+    }
+
+    window.clearTimeout(navigationTimerRef.current);
+    setLeavingRoute(route.hash);
+    navigationTimerRef.current = window.setTimeout(() => {
+      window.location.hash = destination;
+      setLeavingRoute(null);
+    }, 320);
   }, [route.hash]);
 
   function skipToContent(event) {
@@ -84,8 +130,10 @@ export default function App() {
       <a className="skip-nav" href="#main-content" onClick={skipToContent}>
         Skip to content
       </a>
-      <div className="site-shell">
-        <SiteHeader route={route} />
+      <div
+        className={`site-shell${routeLeaving ? ' is-route-leaving' : ''}`}
+        onClickCapture={handleRouteClick}
+      >
         <main id="main-content" ref={mainRef} tabIndex="-1">
           <div className="route-view" key={route.hash}>
             {renderPage(route)}

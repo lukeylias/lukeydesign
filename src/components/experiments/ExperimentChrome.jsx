@@ -1,3 +1,4 @@
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import './experiment.css';
 
 export default function ExperimentChrome({
@@ -23,7 +24,9 @@ export default function ExperimentChrome({
 
       <footer className="experiment-chrome__footer">
         {sourceHref ? (
-          <a href={sourceHref} target="_blank" rel="noreferrer">View source ↗</a>
+          <a className="external-link" href={sourceHref} target="_blank" rel="noreferrer">
+            View source <ExternalLinkIcon />
+          </a>
         ) : (
           <span>Source in repository</span>
         )}

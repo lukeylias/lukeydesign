@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import useFocusTrap from '../../hooks/useFocusTrap';
 import './MobileNav.css';
 
@@ -81,10 +82,12 @@ export default function MobileNav({ onOpenChat }) {
             <a
               key={href}
               href={href}
+              className={external ? 'external-link' : undefined}
               onClick={close}
               {...(external ? { target: '_blank', rel: 'noopener' } : {})}
             >
               {label}
+              {external && <ExternalLinkIcon />}
             </a>
           ))}
         </div>

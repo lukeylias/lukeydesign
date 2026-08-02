@@ -13,7 +13,7 @@ export default function ExperimentView({ route }) {
         </header>
         <p className="reader-not-found">The experiment is unavailable.</p>
         <p>
-          <a href="#/">Back to feed</a>
+          <a href="#/">Back</a>
         </p>
       </section>
     );
@@ -21,7 +21,7 @@ export default function ExperimentView({ route }) {
 
   return (
     <section aria-label="Experiment" className="reader-shell experiment-view">
-      <a href="#/" className="experiment-view__back">← Back to feed</a>
+      <a href="#/" className="experiment-view__back">← Back</a>
       <header className="view-header">
         <h1>{route.entry.title}</h1>
       </header>

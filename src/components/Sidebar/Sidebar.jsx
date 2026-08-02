@@ -1,3 +1,4 @@
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import './Sidebar.css';
 
 const NAV_LINKS = [
@@ -34,9 +35,11 @@ export default function Sidebar({ onOpenChat }) {
           <a
             key={href}
             href={href}
+            className={external ? 'external-link' : undefined}
             {...(external ? { target: '_blank', rel: 'noopener' } : {})}
           >
             {label}
+            {external && <ExternalLinkIcon />}
           </a>
         ))}
       </div>

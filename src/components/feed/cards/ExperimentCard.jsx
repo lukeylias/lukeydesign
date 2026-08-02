@@ -15,7 +15,7 @@ export default function ExperimentCard({ entry }) {
           <p className="feed-date">{formatEntryDate(entry.date)}</p>
         </div>
         <a href={entry.href} className="experiment-card__open-link" aria-label={`Open experiment page: ${entry.title}`}>
-          Open page ↗
+          Open page
         </a>
       </div>
       <p className="feed-summary">{entry.summary}</p>

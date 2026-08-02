@@ -14,6 +14,7 @@ function ReaderBody({ route }) {
 
 export default function ReaderView({ route }) {
   const fallbackHref = useMemo(() => getCanonicalRouteForEntryType(route.entryType), [route.entryType]);
+  const isBlogReader = route.entryType === 'blog';
 
   function onBackClick(event) {
     event.preventDefault();
@@ -22,12 +23,21 @@ export default function ReaderView({ route }) {
   }
 
   return (
-    <article className="reader-shell" aria-labelledby="reader-title">
-      <a href={fallbackHref} className="reader-back" onClick={onBackClick}>
-        <span className="reader-back__icon" aria-hidden="true">
-          <img src="/icons/arrow-right.svg" width="20" height="20" alt="" />
+    <article className={`reader-shell reader-shell--${route.entryType}`} aria-labelledby="reader-title">
+      <a
+        href={fallbackHref}
+        className={isBlogReader ? 'back-link reader-back' : 'reader-back'}
+        onClick={onBackClick}
+      >
+        <span className={isBlogReader ? 'link-arrow' : 'reader-back__icon'} aria-hidden="true">
+          <img
+            src="/icons/arrow-right.svg"
+            width={isBlogReader ? 24 : 20}
+            height={isBlogReader ? 24 : 20}
+            alt=""
+          />
         </span>
-        Notes
+        Back
       </a>
       <header className="reader-header">
         <h1 id="reader-title">{route.entry.title}</h1>

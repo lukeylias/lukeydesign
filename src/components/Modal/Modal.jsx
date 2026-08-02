@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import MediaBlock from '../MediaBlock/MediaBlock';
 import appRegistry from '../apps/index';
 import './Modal.css';
@@ -45,8 +46,13 @@ function renderTextBlock(block, i, item) {
     const isExternal = block.href && (block.href.startsWith('http') || block.href.startsWith('//'));
     return (
       <p key={i}>
-        <a href={block.href} {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-          {block.label || block.href}{isExternal && !block.label?.includes('↗') && ' ↗'}
+        <a
+          className={isExternal ? 'external-link' : undefined}
+          href={block.href}
+          {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {block.label || block.href}
+          {isExternal && <ExternalLinkIcon />}
         </a>
       </p>
     );

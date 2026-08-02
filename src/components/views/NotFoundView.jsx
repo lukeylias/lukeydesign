@@ -6,7 +6,7 @@ export default function NotFoundView() {
       </header>
       <p>This route does not exist.</p>
       <p>
-        <a href="#/">Go back to feed</a>
+        <a href="#/">Back</a>
       </p>
     </section>
   );
