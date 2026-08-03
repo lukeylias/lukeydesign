@@ -409,31 +409,98 @@ export function getCaseStudySections(project) {
   );
 }
 
-export function getFeaturedCaseStudyContent(project) {
-  const config = featuredCaseStudyConfigs[project.slug];
-  if (!config) return null;
-
-  const facts = getProjectFacts(project);
-  const placeholderSnapshotItem = (label, placeholderFor) => ({
+function placeholderSnapshotItem(label, placeholderFor) {
+  return {
     label,
     value: LOREM_SHORT,
     placeholder: true,
     placeholderFor,
-  });
+  };
+}
+
+export function getCaseStudySnapshot(project) {
+  const facts = getProjectFacts(project);
+
+  return [
+    facts?.role
+      ? { label: 'Role', value: facts.role }
+      : placeholderSnapshotItem('Role', 'Confirmed role for this project'),
+    project.contributions
+      ? { label: 'Contributions', value: project.contributions }
+      : placeholderSnapshotItem('Contributions', 'Concise list of Luke’s contributions'),
+    project.workedWith
+      ? { label: 'Worked with', value: project.workedWith }
+      : placeholderSnapshotItem('Worked with', 'Project disciplines and collaborators'),
+    project.timeframe
+      ? { label: 'Timeframe', value: project.timeframe }
+      : placeholderSnapshotItem('Timeframe', 'Project dates and duration'),
+  ];
+}
+
+function placeholderBlock(placeholderFor) {
+  return {
+    type: 'text',
+    value: LOREM_PARAGRAPH,
+    placeholder: true,
+    placeholderFor,
+  };
+}
+
+export function getStandardCaseStudySections(project) {
+  const sections = getCaseStudySections(project) || {};
+  const blocksOrPlaceholder = (blocks, placeholderFor) => (
+    blocks?.length ? blocks : [placeholderBlock(placeholderFor)]
+  );
+
+  return [
+    {
+      title: 'Context and problem',
+      blocks: blocksOrPlaceholder(
+        [...(sections.context || []), ...(sections.problem || [])],
+        'Context, problem, and stakes for this project',
+      ),
+    },
+    {
+      title: 'Contributions',
+      blocks: blocksOrPlaceholder(
+        sections.contribution,
+        'A clear account of Luke’s contributions',
+      ),
+    },
+    {
+      title: 'Key decisions',
+      blocks: blocksOrPlaceholder(
+        sections.decisions,
+        'Decision alternatives, constraints, trade-offs, and their effects',
+      ),
+    },
+    {
+      title: 'The shipped experience',
+      blocks: [placeholderBlock('Final shipped experience narrative and supporting media')],
+    },
+    {
+      title: 'Impact and evidence',
+      blocks: blocksOrPlaceholder(
+        sections.outcomes,
+        'Verified outcomes, measurement method, timeframe, and source',
+      ),
+    },
+    {
+      title: 'Reflection',
+      blocks: blocksOrPlaceholder(
+        sections.reflection,
+        'What changed, what did not, and what Luke would do differently',
+      ),
+    },
+  ];
+}
+
+export function getFeaturedCaseStudyContent(project) {
+  const config = featuredCaseStudyConfigs[project.slug];
+  if (!config) return null;
 
   return {
-    snapshot: [
-      facts?.role && {
-        label: 'Role',
-        value: facts.role,
-      },
-      {
-        label: 'Contributions',
-        value: 'Design · Development · Strategy',
-      },
-      placeholderSnapshotItem('Worked with', 'Project disciplines and collaborators'),
-      placeholderSnapshotItem('Timeframe', 'Project dates and duration'),
-    ].filter(Boolean),
+    snapshot: getCaseStudySnapshot(project),
     sections: config.sections.map((section) => ({
       title: section.title,
       blocks: [

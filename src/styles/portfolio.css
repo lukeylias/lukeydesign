@@ -789,14 +789,24 @@ a:hover .external-link-icon {
   color: var(--color-text-tertiary) !important;
 }
 
+.case-placeholder__status {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
 .case-media {
   margin: 12px 0 0;
   overflow: hidden;
   background: var(--color-surface);
 }
 
-.case-media img,
-.side-project__content img {
+.case-media img {
   width: 100%;
   height: auto;
 }

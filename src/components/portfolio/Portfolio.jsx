@@ -4,9 +4,9 @@ import ExternalLinkIcon from '../ExternalLinkIcon';
 import {
   findSideProject,
   findWorkProject,
-  getCaseStudySections,
+  getCaseStudySnapshot,
   getFeaturedCaseStudyContent,
-  getProjectFacts,
+  getStandardCaseStudySections,
   moreWork,
   normaliseMediaBlock,
   selectedWork,
@@ -143,6 +143,7 @@ function EditorialItem({ href, title, description, media, eager = false }) {
       )}
       <a className="editorial-item__link" href={href}>
         <span>{title}</span>
+        <Arrow />
       </a>
       <p>{description}</p>
     </article>
@@ -381,6 +382,7 @@ function ContentBlock({ block, eager = false }) {
         className={mediaBlock.placeholder ? 'case-placeholder' : undefined}
         data-content-needed={mediaBlock.placeholderFor || undefined}
       >
+        {mediaBlock.placeholder ? <span className="case-placeholder__status">Content needed</span> : null}
         {mediaBlock.value}
       </p>
     );
@@ -442,9 +444,9 @@ export function CaseStudyPage({ slug }) {
   const project = findWorkProject(slug);
   if (!project) return <NotFoundPage />;
 
-  const facts = getProjectFacts(project);
-  const sections = getCaseStudySections(project);
   const featuredContent = getFeaturedCaseStudyContent(project);
+  const snapshot = getCaseStudySnapshot(project);
+  const narrativeSections = featuredContent?.sections || getStandardCaseStudySections(project);
   const projectIndex = workProjects.findIndex((item) => item.slug === project.slug);
   const nextProject = workProjects[(projectIndex + 1) % workProjects.length];
 
@@ -461,84 +463,33 @@ export function CaseStudyPage({ slug }) {
       </figure>
 
       <section
-        className={`project-overview${featuredContent ? ' project-overview--featured' : ''}`}
+        className="project-overview project-overview--featured"
         aria-label="Project overview"
       >
-        <h2>{featuredContent ? 'Project snapshot' : 'Project overview'}</h2>
+        <h2>Project snapshot</h2>
         <dl>
-          {featuredContent
-            ? featuredContent.snapshot.map((item) => (
-                <div key={item.label}>
-                  <dt>{item.label}</dt>
-                  <dd
-                    className={item.placeholder ? 'case-placeholder' : undefined}
-                    data-content-needed={item.placeholderFor || undefined}
-                  >
-                    {item.value}
-                  </dd>
-                </div>
-              ))
-            : (
-              <>
-                {facts?.organisation && (
-                  <div>
-                    <dt>Organisation</dt>
-                    <dd>{facts.organisation}</dd>
-                  </div>
-                )}
-                {facts?.role && (
-                  <div>
-                    <dt>Role</dt>
-                    <dd>{facts.role}</dd>
-                  </div>
-                )}
-                {facts?.dates && (
-                  <div>
-                    <dt>Employment period</dt>
-                    <dd>{facts.dates}</dd>
-                  </div>
-                )}
-              </>
-            )}
+          {snapshot.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label}</dt>
+              <dd
+                className={item.placeholder ? 'case-placeholder' : undefined}
+                data-content-needed={item.placeholderFor || undefined}
+              >
+                {item.placeholder ? <span className="case-placeholder__status">Content needed</span> : null}
+                {item.value}
+              </dd>
+            </div>
+          ))}
         </dl>
       </section>
 
-      {featuredContent
-        ? featuredContent.sections.map((section) => (
-            <NarrativeSection
-              key={section.title}
-              title={section.title}
-              blocks={section.blocks}
-            />
-          ))
-        : (
-          <>
-            <NarrativeSection
-              title="Outcomes"
-              blocks={sections.outcomes}
-            />
-            <NarrativeSection
-              title="Context"
-              blocks={sections.context}
-            />
-            <NarrativeSection
-              title="The challenge"
-              blocks={sections.problem}
-            />
-            <NarrativeSection
-              title="My role"
-              blocks={sections.contribution}
-            />
-            <NarrativeSection
-              title="Decisions"
-              blocks={sections.decisions}
-            />
-            <NarrativeSection
-              title="What I learned"
-              blocks={sections.reflection}
-            />
-          </>
-        )}
+      {narrativeSections.map((section) => (
+        <NarrativeSection
+          key={section.title}
+          title={section.title}
+          blocks={section.blocks}
+        />
+      ))}
 
       <a className="case-study__next" href={nextProject.href}>
         <span>
