@@ -4,9 +4,9 @@ export default {
   type: 'prose',
   content: [
     'Senior Product Designer at nib Health Insurance',
-    'I design, write production code, and build AI deeply into my workflow',
-    'I care about outcomes over aesthetics. Design should solve real problems and connect to business value.',
-    'I build my own tools when what I need doesn\'t exist',
+    'My work is focused on experimentation, AI and product strategy',
+    'I\'m hands-on with code and build tools that help me explore and take ideas further.',
+    'Accessibility and design systems are also consistent parts of my work',
     'Based in Newcastle',
   ],
 };

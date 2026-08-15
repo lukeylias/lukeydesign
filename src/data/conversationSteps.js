@@ -18,25 +18,25 @@ const conversationSteps = [
   <button class="cb-work-card" data-prompt="Redesigning a funnel inside a rebuild">
     <div class="cb-work-card__body">
       <p class="cb-work-card__title">Redesigning a funnel inside a rebuild</p>
-      <p class="cb-work-card__teaser">What started as a tech migration became a full redesign. 13% more users reached the quote stage.</p>
+      <p class="cb-work-card__teaser">What started as a technical migration became a full redesign. Drop-off decreased by 18%, and mobile conversion increased by 11%.</p>
     </div>
   </button>
   <button class="cb-work-card" data-prompt="Turning a manual process into a tool">
     <div class="cb-work-card__body">
       <p class="cb-work-card__title">Turning a manual process into a tool</p>
-      <p class="cb-work-card__teaser">Offer creation went from weeks to minutes. Around two months of labour saved a year.</p>
+      <p class="cb-work-card__teaser">A multi-tool process that took up to two months now takes around 30 minutes in one workspace.</p>
     </div>
   </button>
   <button class="cb-work-card" data-prompt="Building an experimentation practice">
     <div class="cb-work-card__body">
       <p class="cb-work-card__title">Building an experimentation practice</p>
-      <p class="cb-work-card__teaser">Inherited Optimizely, built a lean process, taught the rest of the division to run with it.</p>
+      <p class="cb-work-card__teaser">Built a shared operating model for parallel and overlapping experiments.</p>
     </div>
   </button>
-  <button class="cb-work-card" data-prompt="Making accessibility a culture, not a checkbox">
+  <button class="cb-work-card" data-prompt="Building accessibility capability">
     <div class="cb-work-card__body">
-      <p class="cb-work-card__title">Making accessibility a culture, not a checkbox</p>
-      <p class="cb-work-card__teaser">Built an internal playbook and guild. Shared the stage with Dylan Alcott on International Accessibility Day.</p>
+      <p class="cb-work-card__title">Building accessibility capability</p>
+      <p class="cb-work-card__teaser">Created practical guidance and a11ycats. My product team completed 45 accessibility tickets.</p>
     </div>
   </button>
 </div>`,
@@ -59,39 +59,35 @@ const conversationSteps = [
   },
   {
     prompt: "Turning a manual process into a tool",
-    response: `<p>The operations team was losing months each year to a manual, fragmented process for creating and fulfilling offers. Legacy tools, delayed campaigns, errors.</p>
-<p>I designed a modern interface with the marketing team, running regular feedback sessions to make sure we were solving the right problem. I shaped the frontend architecture to simplify backend integration, and wrote production React to hit a tight deadline.</p>
-<p>Offer creation dropped from weeks to minutes. Near-zero error rates. Roughly two months of labour saved a year.</p>
-<p>One thing that stuck with me: a "best, better, good" framework made prioritisation conversations easy. Everyone could see the trade-offs between ideal and MVP without needing to argue for them.</p>
+    response: `<p>The offer team relied on Excel sheets, Word documents, backend queries and a legacy portal. Work moved across several teams, and the process could take up to two months.</p>
+<p>I mapped the workflow with the marketing and offer teams, then designed one workspace for creating offers, managing drafts, planning work and selecting audiences. I also contributed React to the initial implementation.</p>
+<p>The core workflow now takes around 30 minutes. Manual processing errors have been eliminated, and teams spend less time coordinating files and handoffs.</p>
 <figure class="cb-media"><img src="assets/Offers-Landing-Page.jpg" alt="Internal offer management dashboard" /><figcaption>Offer management dashboard</figcaption></figure>`,
     nextPrompts: ["What's your process?", "How can I contact you?"],
   },
   {
     prompt: "Building an experimentation practice",
-    response: `<p>When the experimentation team was disbanded, ownership of Optimizely was transferred to me.</p>
-<p>Before taking it on, I sat down with the outgoing team to understand what worked, what didn't, and where the pain points were.</p>
-<p>The biggest issue was velocity. Experiments took too long to plan, run, and learn from. Underneath that, the program was running half a dozen experiments a year, most of them disconnected from user problems or business value.</p>
+    response: `<p>At the end of 2025, ownership of Optimizely moved to my product team after a separate optimisation function was disbanded.</p>
+<p>I interviewed the outgoing team, reviewed established experimentation programs, and delivered the first version of a new operating model within a month.</p>
+<p>I combined three years of qualitative research with Contentsquare, Google Analytics, funnel drop-off analysis and competitor research. That work identified four shared problem areas for the program.</p>
 <figure class="cb-media"><figcaption>Lean experimentation process overview.</figcaption></figure>
-<p>I rebuilt the program from the ground up. A lean process designed for speed.</p>
-<p>Identify issues through data (ContentSquare, Google Analytics), form a testable hypothesis tied to a business outcome, design and develop variants, and run.</p>
-<p>I handle the full end-to-end. Analysis through to building variants in Optimizely using HTML, CSS, and JavaScript, or routing directly in React.</p>
-<p>The process has since been adopted by other teams across the division, similar to the accessibility playbook. It gave people a framework they could run with independently.</p>
-<p>One experiment stands out. I noticed high bounce rates and low scroll depth on our quote funnel entry point.</p>
-<p>My hypothesis was that the value exchange wasn't clear enough and users saw too many fields before seeing products. I designed variations that addressed this.</p>
-<p>The result was 13% more users reaching the quote stage.</p>
-<figure class="cb-media"><figcaption>Data analysis using ContentSquare.</figcaption></figure>
+<p>The model ties each experiment to a problem area, a testable hypothesis and metrics connected to customer and business outcomes. It also supports parallel and overlapping experiments instead of assuming only one can run at a time.</p>
+<p>I initially ran the work end to end, including analysis, hypotheses, design, development, QA, monitoring and reporting. I later upskilled developers and helped establish an internal server-side experimentation library.</p>
+<p>A representative Welcome-page experiment replaced a seven-field form with a guided flow that asked one question at a time.</p>
+<p>Across 40,630 visitors, it increased progression to Hospital by 14.16% and Quote Complete by 6.48%.</p>
+<figure class="cb-media"><figcaption>Data analysis using Contentsquare.</figcaption></figure>
 <figure class="cb-media"><figcaption>Demo of an experimentation variant in Optimizely.</figcaption></figure>
-<p>Rebuilding the program wasn't just process. It was cross-functional politics, broken relationships to mend, exec trust to earn, and a team to upskill.</p>
-<p>I led all of that alongside running the experiments myself. The program now runs on industry best practices, has executive-level trust, and has driven meaningful growth for the business.</p>
-<p>The bigger shift was what the program stands for. Hypothesis-led, fast to learn, focused on real user problems tied to real business outcomes. Not experiments for the sake of activity.</p>`,
+<p>The program now supports parallel and overlapping experiments and is being introduced to other teams as a shared standard.</p>`,
     nextPrompts: ["What's your process?", "How can I contact you?"],
   },
   {
-    prompt: "Making accessibility a culture, not a checkbox",
-    response: `<p>Accessibility at nib was reactive. No standardised auditing, no measurement, no consistent process. This became a real problem when partner inquiries about compliance revealed gaps that put commercial relationships at risk.</p>
-<p>I built an internal Playbook site with video tutorials and a framework teams could actually follow. To scale it, I launched a11ycats, an internal guild, and ran a company-wide roadshow to train teams on integrating accessibility into their workflow, not bolting it on at the end.</p>
-<p>Multiple product teams now use the playbook as part of their process. I was invited to speak alongside Dylan Alcott on International Accessibility Day to share what we'd built.</p>
-<p>The thing that shifted wasn't tooling. It was accessibility becoming a conversation, not a checkbox.</p>
+    prompt: "Building accessibility capability",
+    response: `<p>I began this work independently in mid-2024, drawing on accessibility experience from my previous role.</p>
+<p>I first created a single-page guide with ten common checks and a11ycats, an internal group that grew to around 40 members.</p>
+<p>An external agency then audited products across the business. I used those findings to expand the guidance into an interactive playbook website.</p>
+<p>I presented the playbook to around six product teams and helped each team use it to audit parts of its own application.</p>
+<p>My product team completed 45 accessibility tickets, with two remaining items parked. Across the wider business, more than 80% of identified issues were addressed.</p>
+<p>I later joined an International Accessibility Day panel alongside Dylan Alcott to share the approach. The work has since been handed to other teams to continue.</p>
 <figure class="cb-media"><img src="assets/meatnib.jpeg" alt="International Accessibility Day presentation" /><figcaption>International Accessibility Day with Dylan Alcott</figcaption></figure>`,
     nextPrompts: ["What's your process?", "How can I contact you?"],
   },
@@ -114,7 +110,7 @@ const conversationSteps = [
   {
     prompt: "How can I contact you?",
     response: `<p>Easiest way is email: <a href="mailto:lukeylias@gmail.com">lukeylias@gmail.com</a></p>
-<p>I'm also on <a href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noopener noreferrer">LinkedIn</a> and <a href="https://github.com/lukeylias" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>`,
+<p>I'm also on <a class="external-link" href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noopener noreferrer">LinkedIn<img class="external-link-icon" src="/icons/arrow-up-right.svg" width="16" height="16" alt="" aria-hidden="true"></a> and <a class="external-link" href="https://github.com/lukeylias" target="_blank" rel="noopener noreferrer">GitHub<img class="external-link-icon" src="/icons/arrow-up-right.svg" width="16" height="16" alt="" aria-hidden="true"></a>.</p>`,
     nextPrompts: [],
   },
 ];
@@ -134,7 +130,7 @@ export const WORK_SUB_NODES = new Set([
   "Redesigning a funnel inside a rebuild",
   "Turning a manual process into a tool",
   "Building an experimentation practice",
-  "Making accessibility a culture, not a checkbox",
+  "Building accessibility capability",
 ]);
 
 // Ordered fallback priority list

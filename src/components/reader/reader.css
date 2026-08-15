@@ -219,6 +219,95 @@
   }
 }
 
+/* Note readers use the same restrained scale and rhythm as the portfolio routes. */
+.reader-shell--blog {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-top: 128px;
+}
+
+.reader-shell--blog .reader-back {
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.reader-shell--blog .reader-header {
+  max-width: 40rem;
+  padding: 64px 0;
+}
+
+.reader-shell--blog .reader-header h1 {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.032em;
+}
+
+.reader-shell--blog .reader-summary {
+  max-width: 38rem;
+  margin-top: 24px;
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 29px;
+  letter-spacing: -0.012em;
+}
+
+.reader-shell--blog .reader-content {
+  max-width: 38rem;
+}
+
+.reader-shell--blog .reader-content p {
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 29px;
+  letter-spacing: -0.008em;
+}
+
+.reader-shell--blog .reader-content a {
+  text-decoration-color: #777777;
+  text-underline-offset: 3px;
+}
+
+.reader-shell--blog .reader-content a:hover {
+  color: #ffffff;
+  text-decoration-color: #ededed;
+}
+
+.reader-shell--blog .reader-table {
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.reader-shell--blog .reader-section-heading {
+  margin-top: 24px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.012em;
+}
+
+@media (max-width: 700px) {
+  .reader-shell--blog {
+    padding-top: 68px;
+  }
+
+  .reader-shell--blog .reader-header {
+    padding: 52px 0;
+  }
+
+  .reader-shell--blog .reader-header h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .reader-shell--blog .reader-summary,
+  .reader-shell--blog .reader-content p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+
 .reader-not-found {
   border: 1px dashed var(--color-border);
   border-radius: var(--border-radius-card);

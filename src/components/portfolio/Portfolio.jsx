@@ -1,25 +1,33 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
 import about from '../../data/about';
-import useFocusTrap from '../../hooks/useFocusTrap';
+import { blogAndExperimentEntries } from '../../data/entries';
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import {
   findSideProject,
   findWorkProject,
-  getCaseStudySections,
+  getCaseStudySnapshot,
   getFeaturedCaseStudyContent,
-  getProjectFacts,
+  getStandardCaseStudySections,
   moreWork,
   normaliseMediaBlock,
   selectedWork,
   sideProjects,
+  workAuthorshipNotes,
   workProjects,
   writing,
 } from '../../data/portfolio';
 import '../../styles/portfolio.css';
+import { PreviewableImage } from '../ImagePreview/ImagePreview';
+
+const writingDateBySlug = Object.fromEntries(
+  blogAndExperimentEntries.map((entry) => [entry.slug, entry.date]),
+);
+
+const experiments = blogAndExperimentEntries
+  .filter((entry) => entry.type === 'experiment')
+  .map((entry) => ({
+    ...entry,
+    headline: entry.title,
+  }));
 
 function Arrow() {
   return (
@@ -31,7 +39,7 @@ function Arrow() {
 
 function ProjectImage({ media, eager = false }) {
   return (
-    <img
+    <PreviewableImage
       src={media.src}
       width={media.width}
       height={media.height}
@@ -40,178 +48,6 @@ function ProjectImage({ media, eager = false }) {
       fetchPriority={eager ? 'high' : 'auto'}
       decoding="async"
     />
-  );
-}
-
-export function SiteHeader({ route }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuClosing, setMenuClosing] = useState(false);
-  const menuRef = useRef(null);
-  const menuTimerRef = useRef(null);
-  const workActive = ['home', 'work-detail'].includes(route.type);
-  const notesActive = route.type === 'notes' || (route.type === 'reader' && route.entryType === 'blog');
-  const aboutActive = route.type === 'about';
-
-  useFocusTrap(menuRef, menuOpen);
-
-  const closeMenu = useCallback((destinationHref = null) => {
-    if (!menuOpen || menuClosing) return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const exitDuration = prefersReducedMotion ? 0 : 260;
-
-    setMenuClosing(true);
-    window.clearTimeout(menuTimerRef.current);
-    menuTimerRef.current = window.setTimeout(() => {
-      setMenuOpen(false);
-      setMenuClosing(false);
-      if (destinationHref) window.location.hash = destinationHref;
-    }, exitDuration);
-  }, [menuClosing, menuOpen]);
-
-  const openMenu = useCallback(() => {
-    window.clearTimeout(menuTimerRef.current);
-    setMenuClosing(false);
-    setMenuOpen(true);
-  }, []);
-
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') closeMenu();
-    }
-
-    document.documentElement.classList.add('menu-open');
-    document.body.classList.add('menu-open');
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.documentElement.classList.remove('menu-open');
-      document.body.classList.remove('menu-open');
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [closeMenu, menuOpen]);
-
-  useEffect(() => {
-    const desktop = window.matchMedia('(min-width: 701px)');
-
-    function closeOnDesktop(event) {
-      if (!event.matches) return;
-
-      window.clearTimeout(menuTimerRef.current);
-      setMenuClosing(false);
-      setMenuOpen(false);
-    }
-
-    desktop.addEventListener('change', closeOnDesktop);
-    return () => desktop.removeEventListener('change', closeOnDesktop);
-  }, []);
-
-  useEffect(() => () => {
-    window.clearTimeout(menuTimerRef.current);
-  }, []);
-
-  function handleMenuNavigate(event) {
-    event.preventDefault();
-    closeMenu(event.currentTarget.getAttribute('href'));
-  }
-
-  return (
-    <header className="site-header">
-      <a className="site-brand" href="#/" aria-label="Luke Ylias, home">
-        <img src="/icons/luke-portrait-logo.png" width="1024" height="1024" alt="" />
-      </a>
-      <nav className="site-nav" aria-label="Primary navigation">
-        <a href="#/" aria-current={workActive ? 'page' : undefined}>Work</a>
-        <a href="#/notes" aria-current={notesActive ? 'page' : undefined}>Notes</a>
-        <a href="#/about" aria-current={aboutActive ? 'page' : undefined}>About</a>
-      </nav>
-      <button
-        className="site-menu-toggle"
-        type="button"
-        aria-controls="mobile-site-menu"
-        aria-expanded={menuOpen}
-        onClick={openMenu}
-      >
-        Menu
-      </button>
-
-      {menuOpen && (
-        <div
-          ref={menuRef}
-          id="mobile-site-menu"
-          className={`site-menu-overlay${menuClosing ? ' site-menu-overlay--closing' : ''}`}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site navigation"
-        >
-          <div className="site-menu-overlay__inner">
-            <div className="site-menu-overlay__top">
-              <span className="site-menu-overlay__brand" aria-hidden="true">
-                <img src="/icons/luke-portrait-logo.png" width="1024" height="1024" alt="" />
-              </span>
-              <button
-                className="site-menu-close"
-                type="button"
-                onClick={() => closeMenu()}
-              >
-                Close
-              </button>
-            </div>
-
-            <nav className="site-menu-overlay__nav" aria-label="Mobile navigation">
-              <a
-                href="#/"
-                aria-current={workActive ? 'page' : undefined}
-                onClick={handleMenuNavigate}
-              >
-                Work
-              </a>
-              <a
-                href="#/notes"
-                aria-current={notesActive ? 'page' : undefined}
-                onClick={handleMenuNavigate}
-              >
-                Notes
-              </a>
-              <a
-                href="#/about"
-                aria-current={aboutActive ? 'page' : undefined}
-                onClick={handleMenuNavigate}
-              >
-                About
-              </a>
-            </nav>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
-
-export function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <nav className="social-links" aria-label="Social profiles">
-        <a
-          href="https://github.com/lukeylias"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Luke Ylias on GitHub"
-        >
-          <img src="/icons/github.svg" width="128" height="128" alt="" />
-        </a>
-        <a
-          href="https://www.linkedin.com/in/lukeylias/"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Luke Ylias on LinkedIn"
-        >
-          <img src="/icons/linkedin.png" width="840" height="779" alt="" />
-        </a>
-      </nav>
-    </footer>
   );
 }
 
@@ -242,14 +78,31 @@ function ReelPlaceholder() {
   );
 }
 
-function SelectedProjectCard({ project, eager }) {
+const SHOW_REEL_PLACEHOLDER = false;
+
+export function SiteFooter() {
   return (
-    <a className="selected-project" href={project.href}>
-      <span className="selected-project__media">
-        <ProjectImage media={project.media} eager={eager} />
-      </span>
-      <span className="selected-project__title">{project.headline}</span>
-    </a>
+    <footer className="site-footer">
+      <h2>Connect</h2>
+      <nav className="social-links" aria-label="Social profiles">
+        <a
+          className="external-link"
+          href="https://github.com/lukeylias"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub <ExternalLinkIcon />
+        </a>
+        <a
+          className="external-link"
+          href="https://www.linkedin.com/in/lukeylias/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          LinkedIn <ExternalLinkIcon />
+        </a>
+      </nav>
+    </footer>
   );
 }
 
@@ -268,128 +121,199 @@ function CompactLinkList({ items }) {
   );
 }
 
-const sideProjectPresentation = {
+const homeSideProjectDescriptions = {
   sa11y: {
-    icon: '/icons/side-projects/sa11y.svg',
-    meta: 'Web accessibility tool',
+    description: 'Web accessibility tool.',
   },
   a11ycat: {
-    icon: '/icons/side-projects/a11ycat.svg',
-    meta: 'AI accessibility auditor',
+    description: 'AI accessibility auditor.',
   },
   'figma-plugins': {
-    icon: '/icons/side-projects/figma-plugins.svg',
-    meta: 'Three design plugins',
+    description: 'Three small design tools.',
   },
 };
 
-function SideProjectList({ items }) {
-  return (
-    <ul className="side-project-list">
-      {items.map((item) => {
-        const presentation = sideProjectPresentation[item.slug];
+const homeWorkDescriptions = {
+  'experimentation-at-nib': 'Redefining how nib identifies, runs and measures product experiments.',
+  'accessibility-at-nib': 'Building the playbook, training and community that support accessibility at nib.',
+  'stacks-design-system': 'Creating a shared design system for consistent product delivery.',
+};
 
-        return (
-          <li key={item.slug}>
-            <a className="side-project-list__item" href={item.href}>
-              <span className={`side-project-list__icon side-project-list__icon--${item.slug}`}>
-                <img
-                  src={presentation.icon}
-                  width="48"
-                  height="48"
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                />
-              </span>
-              <span className="side-project-list__copy">
-                <span className="side-project-list__title">{item.headline}</span>
-                <span className="side-project-list__meta">{presentation.meta}</span>
-              </span>
-            </a>
-          </li>
-        );
-      })}
-    </ul>
+const selectedDescriptions = {
+  'iwhi-funnel-redesign': 'Redesigning the quote and join experience for international customers.',
+  'offer-management': 'Bringing offer creation, audience selection and delivery into one internal tool.',
+};
+
+function EditorialItem({ href, title, description, media, eager = false }) {
+  return (
+    <article className={`editorial-item${media ? ' editorial-item--with-media' : ''}`}>
+      {media && (
+        <div className="editorial-item__media">
+          <ProjectImage media={media} eager={eager} />
+        </div>
+      )}
+      <a className="editorial-item__link" href={href}>
+        <span>{title}</span>
+      </a>
+      <p>{description}</p>
+    </article>
   );
 }
 
-function NoteList({ items }) {
+function HomeNoteLink({ href, children }) {
   return (
-    <ul className="more-work-list note-list">
-      {items.map((item) => (
-        <li key={item.slug}>
-          <a className="more-work-list__item note-list__item" href={item.href}>
-            <span className="more-work-list__copy">
-              <span className="more-work-list__title">{item.headline}</span>
-              <span className="more-work-list__meta note-list__meta">{item.body}</span>
-            </span>
-            <span className="more-work-list__arrow" aria-hidden="true">
-              <img src="/icons/arrow-right.svg" width="24" height="24" alt="" />
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <a className="editorial-item__link home-note-link" href={href}>
+      <span>{children}</span>
+    </a>
+  );
+}
+
+function EditorialColumn({ title, children }) {
+  return (
+    <section className="editorial-column">
+      <h2>{title}</h2>
+      <div className="editorial-column__items">{children}</div>
+    </section>
   );
 }
 
 export function HomePage() {
   return (
-    <>
-      <section className="home-hero" aria-labelledby="home-title">
+    <article className="home-page">
+      <header className="home-intro" aria-labelledby="home-title">
         <h1 id="home-title">Luke Ylias</h1>
-        <p>I design, write production code, and build AI deeply into my workflow.</p>
+        <div className="home-intro__copy">
+          <p>
+            <em>
+              Senior Product Designer focused on experimentation, AI and product strategy. I’m also
+              hands-on with code, building tools that help me take ideas further.
+            </em>
+          </p>
+        </div>
+      </header>
+
+      {SHOW_REEL_PLACEHOLDER && <ReelPlaceholder />}
+
+      <div className="home-index-scroll">
+        <div className="home-index">
+          <section className="selected-work" aria-labelledby="selected-work-title">
+            <h2 id="selected-work-title">Selected case studies</h2>
+            <div className="selected-work__grid">
+              {selectedWork.map((project, index) => (
+                <EditorialItem
+                  key={project.slug}
+                  href={project.href}
+                  title={project.headline}
+                  description={selectedDescriptions[project.slug]}
+                  media={project.media}
+                  eager={index === 0}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="editorial-index" aria-label="More work and side projects">
+            <EditorialColumn title="More work">
+              {moreWork.slice(0, 3).map((project) => (
+                <EditorialItem
+                  key={project.slug}
+                  href={project.href}
+                  title={project.headline}
+                  description={homeWorkDescriptions[project.slug]}
+                />
+              ))}
+            </EditorialColumn>
+
+            <EditorialColumn title="Side projects">
+              {sideProjects.map((project) => (
+                <EditorialItem
+                  key={project.slug}
+                  href={project.href}
+                  title={project.headline}
+                  description={homeSideProjectDescriptions[project.slug].description}
+                />
+              ))}
+            </EditorialColumn>
+          </section>
+        </div>
+      </div>
+
+      <section className="home-notes" aria-labelledby="home-notes-title">
+        <h2 id="home-notes-title">Notes</h2>
+        <div className="home-notes__items">
+          <HomeNoteLink href={writing[0].href}>
+            {writing[0].headline}. A voice-first workflow.
+          </HomeNoteLink>
+          <HomeNoteLink href="#/notes">All notes on design, code, and AI.</HomeNoteLink>
+        </div>
       </section>
 
-      <ReelPlaceholder />
-
-      <section className="selected-work section-block" aria-labelledby="selected-work-title">
-        <div className="section-heading-row">
-          <h2 id="selected-work-title">Selected work</h2>
-        </div>
-        <div className="selected-work__grid">
-          {selectedWork.map((project) => (
-            <SelectedProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
+      <section className="home-about" aria-labelledby="home-about-title">
+        <h2 id="home-about-title">About</h2>
+        <p>
+          <span className="home-about__copy">
+            My work spans experimentation, product strategy and delivery, with AI and code
+            as part of the day-to-day process.{' '}
+          </span>
+          <a href="#/about">More about me.</a>
+        </p>
       </section>
+    </article>
+  );
+}
 
-      <section className="portfolio-lists section-block" aria-label="More work and side projects">
-        <div>
-          <h2>Work</h2>
-          <MoreWorkList items={moreWork.slice(0, 3)} />
-        </div>
-        <div>
-          <h2>Side projects</h2>
-          <SideProjectList items={sideProjects} />
-        </div>
-      </section>
+function NoteList({ items }) {
+  const datedItems = items
+    .map((item) => ({
+      ...item,
+      date: writingDateBySlug[item.slug] || '2026-01-01',
+    }))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  const groupedItems = datedItems.reduce((groups, item) => {
+    const year = item.date.slice(0, 4);
+    const group = groups.find((candidate) => candidate.year === year);
+    if (group) {
+      group.items.push(item);
+    } else {
+      groups.push({ year, items: [item] });
+    }
+    return groups;
+  }, []);
 
-      <section className="writing-section section-block" aria-labelledby="notes-preview-title">
-        <div className="section-heading-row section-heading-row--split">
-          <h2 id="notes-preview-title">Notes</h2>
-          <a className="quiet-link" href="#/notes">
-            View all
-            <Arrow />
-          </a>
-        </div>
-        <NoteList items={writing.slice(0, 3)} />
-      </section>
-    </>
+  return (
+    <div className="notes-index">
+      {groupedItems.map((group) => (
+        <section className="notes-year" key={group.year} aria-labelledby={`notes-year-${group.year}`}>
+          <h2 id={`notes-year-${group.year}`} className="notes-year__label">{group.year}</h2>
+          <div className="notes-year__items">
+            {group.items.map((item) => {
+              const [, month, day] = item.date.split('-');
+
+              return (
+                <a className="notes-row" key={item.slug} href={item.href}>
+                  <span>{item.headline}</span>
+                  <time dateTime={item.date}>{day}/{month}</time>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
   );
 }
 
 export function NotesPage() {
   return (
     <section className="notes-page" aria-labelledby="notes-title">
-      <header className="notes-page__header">
-        <p className="eyebrow">Notes</p>
-        <h1 id="notes-title">Things I’m learning, building, and thinking through.</h1>
-        <p>Notes on design, production code, AI, and the way I work.</p>
-      </header>
+      <div className="notes-page__content">
+        <a className="back-link" href="#/"><Arrow /> Back</a>
+        <header className="notes-page__header">
+          <h1 id="notes-title">Notes</h1>
+        </header>
 
-      <NoteList items={writing} />
+        <NoteList items={writing} />
+      </div>
     </section>
   );
 }
@@ -397,34 +321,25 @@ export function NotesPage() {
 export function SideProjectIndexPage() {
   return (
     <section className="index-page index-page--compact" aria-labelledby="side-project-index-title">
+      <a className="back-link" href="#/"><Arrow /> Back</a>
       <header className="index-page__header">
-        <p className="eyebrow">Side projects</p>
-        <h1 id="side-project-index-title">I build my own tools when what I need doesn’t exist.</h1>
+        <h1 id="side-project-index-title">Side projects</h1>
+        <p>I build my own tools when what I need doesn’t exist.</p>
       </header>
       <CompactLinkList items={sideProjects} />
     </section>
   );
 }
 
-function MoreWorkList({ items }) {
+export function ExperimentIndexPage() {
   return (
-    <ul className="more-work-list">
-      {items.map((project) => (
-        <li key={project.slug}>
-          <a className="more-work-list__item" href={project.href}>
-            <span className="more-work-list__copy">
-              <span className="more-work-list__title">{project.headline}</span>
-              {project.selectedLabel && (
-                <span className="more-work-list__meta">{project.selectedLabel}</span>
-              )}
-            </span>
-            <span className="more-work-list__arrow" aria-hidden="true">
-              <img src="/icons/arrow-right.svg" width="24" height="24" alt="" />
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <section className="index-page index-page--compact" aria-labelledby="experiment-index-title">
+      <a className="back-link" href="#/"><Arrow /> Back</a>
+      <header className="index-page__header">
+        <h1 id="experiment-index-title">Experiments</h1>
+      </header>
+      <CompactLinkList items={experiments} />
+    </section>
   );
 }
 
@@ -433,30 +348,17 @@ export function AboutPage() {
 
   return (
     <article className="about-page" aria-labelledby="about-title">
+      <a className="back-link" href="#/"><Arrow /> Back</a>
       <section className="about-intro">
         <div className="about-intro__copy">
-          <p className="eyebrow">About</p>
-          <h1 id="about-title">
-            I’m Luke Ylias, a {confirmedCopy[0]}.
-          </h1>
+          <h1 id="about-title">About</h1>
           <div className="about-intro__story">
+            <p>I’m Luke Ylias, a {confirmedCopy[0]}.</p>
             <p>{confirmedCopy[1]}.</p>
             <p>{confirmedCopy[2]}</p>
             <p>{confirmedCopy[3]}.</p>
           </div>
         </div>
-
-        <figure className="about-portrait">
-          <img
-            src="/assets/me.jpg"
-            width="1776"
-            height="1184"
-            alt="Luke Ylias standing outdoors beneath an arch of trees"
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </figure>
       </section>
 
       <section className="about-details" aria-label="Experience and profiles">
@@ -480,15 +382,15 @@ export function AboutPage() {
           <h2>Elsewhere</h2>
           <ul>
             <li>
-              <a href="https://github.com/lukeylias" target="_blank" rel="noreferrer">
+              <a className="external-link" href="https://github.com/lukeylias" target="_blank" rel="noreferrer">
                 GitHub
-                <img src="/icons/arrow-up-right.svg" width="20" height="20" alt="" />
+                <ExternalLinkIcon />
               </a>
             </li>
             <li>
-              <a href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noreferrer">
+              <a className="external-link" href="https://www.linkedin.com/in/lukeylias/" target="_blank" rel="noreferrer">
                 LinkedIn
-                <img src="/icons/arrow-up-right.svg" width="20" height="20" alt="" />
+                <ExternalLinkIcon />
               </a>
             </li>
           </ul>
@@ -496,6 +398,27 @@ export function AboutPage() {
       </section>
     </article>
   );
+}
+
+function EmphasizedText({ value, phrases = [] }) {
+  if (phrases.length === 0) return value;
+
+  const matches = phrases
+    .map((phrase) => ({ phrase, start: value.indexOf(phrase) }))
+    .filter((match) => match.start >= 0)
+    .sort((a, b) => a.start - b.start);
+  const content = [];
+  let cursor = 0;
+
+  matches.forEach(({ phrase, start }) => {
+    if (start < cursor) return;
+    if (start > cursor) content.push(value.slice(cursor, start));
+    content.push(<strong key={`${start}-${phrase}`}>{phrase}</strong>);
+    cursor = start + phrase.length;
+  });
+
+  if (cursor < value.length) content.push(value.slice(cursor));
+  return content;
 }
 
 function ContentBlock({ block, eager = false }) {
@@ -507,14 +430,22 @@ function ContentBlock({ block, eager = false }) {
         className={mediaBlock.placeholder ? 'case-placeholder' : undefined}
         data-content-needed={mediaBlock.placeholderFor || undefined}
       >
-        {mediaBlock.value}
+        {mediaBlock.placeholder ? <span className="case-placeholder__status">Content needed</span> : null}
+        <EmphasizedText value={mediaBlock.value} phrases={mediaBlock.emphasis} />
       </p>
+    );
+  }
+  if (mediaBlock.type === 'list') {
+    return (
+      <ul className="case-list">
+        {mediaBlock.items.map((item) => <li key={item}>{item}</li>)}
+      </ul>
     );
   }
   if (mediaBlock.type === 'image') {
     return (
       <figure className="case-media">
-        <img
+        <PreviewableImage
           src={mediaBlock.src}
           width={mediaBlock.width}
           height={mediaBlock.height}
@@ -524,6 +455,14 @@ function ContentBlock({ block, eager = false }) {
           decoding="async"
         />
       </figure>
+    );
+  }
+  if (mediaBlock.type === 'media-placeholder') {
+    return (
+      <div className="case-media-placeholder" aria-label="Suggested imagery">
+        <span className="case-media-placeholder__label">Suggested imagery</span>
+        <span className="case-media-placeholder__copy">{mediaBlock.value}</span>
+      </div>
     );
   }
   if (mediaBlock.type === 'video') {
@@ -539,15 +478,9 @@ function ContentBlock({ block, eager = false }) {
   if (mediaBlock.type === 'link') {
     return (
       <p>
-        <a className="text-link" href={mediaBlock.href} target="_blank" rel="noreferrer">
+        <a className="text-link external-link" href={mediaBlock.href} target="_blank" rel="noreferrer">
           {mediaBlock.label || mediaBlock.href}
-          <img
-            className="inline-external-icon"
-            src="/icons/arrow-up-right.svg"
-            width="18"
-            height="18"
-            alt=""
-          />
+          <ExternalLinkIcon />
         </a>
       </p>
     );
@@ -574,18 +507,19 @@ export function CaseStudyPage({ slug }) {
   const project = findWorkProject(slug);
   if (!project) return <NotFoundPage />;
 
-  const facts = getProjectFacts(project);
-  const sections = getCaseStudySections(project);
   const featuredContent = getFeaturedCaseStudyContent(project);
+  const snapshot = getCaseStudySnapshot(project);
+  const narrativeSections = featuredContent?.sections || getStandardCaseStudySections(project);
   const projectIndex = workProjects.findIndex((item) => item.slug === project.slug);
   const nextProject = workProjects[(projectIndex + 1) % workProjects.length];
 
   return (
     <article className="case-study" aria-labelledby="case-study-title">
-      <a className="back-link" href="#/"><Arrow /> Selected work</a>
+      <a className="back-link" href="#/"><Arrow /> Back</a>
       <header className="case-study__hero">
         <h1 id="case-study-title">{project.headline}</h1>
-        <p>{project.body}</p>
+        <p className="case-study__summary">{project.body}</p>
+        <p className="authorship-note"><em>{workAuthorshipNotes[project.slug]}</em></p>
       </header>
 
       <figure className="case-study__cover">
@@ -593,84 +527,33 @@ export function CaseStudyPage({ slug }) {
       </figure>
 
       <section
-        className={`project-overview${featuredContent ? ' project-overview--featured' : ''}`}
+        className="project-overview project-overview--featured"
         aria-label="Project overview"
       >
-        <h2>{featuredContent ? 'Project snapshot' : 'Project overview'}</h2>
+        <h2>Project snapshot</h2>
         <dl>
-          {featuredContent
-            ? featuredContent.snapshot.map((item) => (
-                <div key={item.label}>
-                  <dt>{item.label}</dt>
-                  <dd
-                    className={item.placeholder ? 'case-placeholder' : undefined}
-                    data-content-needed={item.placeholderFor || undefined}
-                  >
-                    {item.value}
-                  </dd>
-                </div>
-              ))
-            : (
-              <>
-                {facts?.organisation && (
-                  <div>
-                    <dt>Organisation</dt>
-                    <dd>{facts.organisation}</dd>
-                  </div>
-                )}
-                {facts?.role && (
-                  <div>
-                    <dt>Role</dt>
-                    <dd>{facts.role}</dd>
-                  </div>
-                )}
-                {facts?.dates && (
-                  <div>
-                    <dt>Employment period</dt>
-                    <dd>{facts.dates}</dd>
-                  </div>
-                )}
-              </>
-            )}
+          {snapshot.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label}</dt>
+              <dd
+                className={item.placeholder ? 'case-placeholder' : undefined}
+                data-content-needed={item.placeholderFor || undefined}
+              >
+                {item.placeholder ? <span className="case-placeholder__status">Content needed</span> : null}
+                {item.value}
+              </dd>
+            </div>
+          ))}
         </dl>
       </section>
 
-      {featuredContent
-        ? featuredContent.sections.map((section) => (
-            <NarrativeSection
-              key={section.title}
-              title={section.title}
-              blocks={section.blocks}
-            />
-          ))
-        : (
-          <>
-            <NarrativeSection
-              title="Outcomes"
-              blocks={sections.outcomes}
-            />
-            <NarrativeSection
-              title="Context"
-              blocks={sections.context}
-            />
-            <NarrativeSection
-              title="The challenge"
-              blocks={sections.problem}
-            />
-            <NarrativeSection
-              title="My role"
-              blocks={sections.contribution}
-            />
-            <NarrativeSection
-              title="Decisions"
-              blocks={sections.decisions}
-            />
-            <NarrativeSection
-              title="What I learned"
-              blocks={sections.reflection}
-            />
-          </>
-        )}
+      {narrativeSections.map((section) => (
+        <NarrativeSection
+          key={section.title}
+          title={section.title}
+          blocks={section.blocks}
+        />
+      ))}
 
       <a className="case-study__next" href={nextProject.href}>
         <span>
@@ -689,11 +572,11 @@ export function SideProjectPage({ slug }) {
 
   return (
     <article className="side-project" aria-labelledby="side-project-title">
-      <a className="back-link" href="#/"><Arrow /> Home</a>
+      <a className="back-link" href="#/"><Arrow /> Back</a>
       <header className="side-project__hero">
         <p className="eyebrow">Side project</p>
         <h1 id="side-project-title">{project.headline}</h1>
-        <p>{project.body}</p>
+        <p className="side-project__summary">{project.body}</p>
       </header>
       <div className="side-project__content">
         {project.modalContent.map((block, index) => (
@@ -709,7 +592,7 @@ export function NotFoundPage() {
     <section className="not-found" aria-labelledby="not-found-title">
       <p className="eyebrow">404</p>
       <h1 id="not-found-title">This page could not be found.</h1>
-      <a className="text-link" href="#/">Return home <Arrow /></a>
+      <a className="text-link" href="#/">Back <Arrow /></a>
     </section>
   );
 }

@@ -1,12 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import ExternalLinkIcon from '../ExternalLinkIcon';
 import useFocusTrap from '../../hooks/useFocusTrap';
 import './MobileNav.css';
 
 const NAV_LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#main-feed', label: 'Main Feed' },
-  { href: '#work', label: 'Work' },
-  { href: '#stack', label: 'Stack' },
+  { href: '#/', label: 'Home' },
+  { href: '#/notes', label: 'Notes' },
+  { href: '#/experiments', label: 'Experiments' },
+  { href: '#/stack', label: 'Stack' },
+  { href: '#/about', label: 'About' },
 ];
 
 const EXTERNAL_LINKS = [
@@ -81,10 +83,12 @@ export default function MobileNav({ onOpenChat }) {
             <a
               key={href}
               href={href}
+              className={external ? 'external-link' : undefined}
               onClick={close}
               {...(external ? { target: '_blank', rel: 'noopener' } : {})}
             >
               {label}
+              {external && <ExternalLinkIcon />}
             </a>
           ))}
         </div>
