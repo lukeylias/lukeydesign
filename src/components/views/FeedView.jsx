@@ -4,7 +4,7 @@ import FeedList from '../feed/FeedList';
 import '../feed/feed.css';
 
 function headingFor(filter) {
-  if (filter === 'blog') return 'Blog';
+  if (filter === 'blog') return 'Notes';
   if (filter === 'case-studies') return 'Case Studies';
   if (filter === 'experiment') return 'Experiments';
   return 'Feed';

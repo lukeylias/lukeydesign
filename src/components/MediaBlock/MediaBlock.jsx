@@ -1,23 +1,22 @@
 import { useState } from 'react';
-import { isLightboxable, toEmbedUrl } from '../../utils/media';
+import { toEmbedUrl } from '../../utils/media';
+import { PreviewableImage } from '../ImagePreview/ImagePreview';
 import './MediaBlock.css';
 
 /* ------------------------------------------------------------------ */
 /*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-/** 250×250 fixed crop, click opens lightbox for images/gifs. */
-function ThumbnailMedia({ media, onLightbox }) {
-  const lightboxable = isLightboxable(media.type);
-
+/** 250×250 fixed crop with image preview. */
+function ThumbnailMedia({ media }) {
   if (media.type === 'video' || media.type === 'iframe') {
     if (media.poster) {
       return (
-        <img
+        <PreviewableImage
           className="media-block media-block--thumbnail"
+          triggerClassName="image-preview-trigger--thumbnail"
           src={media.poster}
-          alt={media.alt || ''}
-          onClick={(e) => { e.stopPropagation(); onLightbox?.({ type: 'image', src: media.poster, alt: media.alt }); }}
+          alt={media.alt || 'Video preview image'}
         />
       );
     }
@@ -29,12 +28,11 @@ function ThumbnailMedia({ media, onLightbox }) {
   }
 
   return (
-    <img
+    <PreviewableImage
       className="media-block media-block--thumbnail"
+      triggerClassName="image-preview-trigger--thumbnail"
       src={media.src}
       alt={media.alt || ''}
-      onClick={lightboxable ? (e) => { e.stopPropagation(); onLightbox?.(media); } : undefined}
-      style={lightboxable ? { cursor: 'zoom-in' } : undefined}
     />
   );
 }
@@ -58,7 +56,7 @@ function HeroMedia({ media }) {
   }
 
   return (
-    <img
+    <PreviewableImage
       className="media-block media-block--hero"
       src={media.src}
       alt={media.alt || ''}
@@ -131,7 +129,7 @@ function BodyMedia({ media, imageIndex }) {
             <div className="media-block__spinner" />
           </div>
         )}
-        <img
+        <PreviewableImage
           src={media.src}
           alt={media.alt || ''}
           className={`media-block__image ${loaded ? 'media-block__image--loaded' : ''}`}
@@ -152,15 +150,14 @@ function BodyMedia({ media, imageIndex }) {
  *
  * @param {object}   media      - { type, src, alt?, poster?, aspectRatio? }
  * @param {string}   context    - 'thumbnail' | 'hero' | 'body'
- * @param {function} onLightbox - called with media object when lightbox should open (thumbnail only)
  * @param {number}   imageIndex - running image index for lazy loading (body images only)
  */
-export default function MediaBlock({ media, context = 'body', onLightbox, imageIndex }) {
+export default function MediaBlock({ media, context = 'body', imageIndex }) {
   if (!media?.src) return null;
 
   switch (context) {
     case 'thumbnail':
-      return <ThumbnailMedia media={media} onLightbox={onLightbox} />;
+      return <ThumbnailMedia media={media} />;
     case 'hero':
       return <HeroMedia media={media} />;
     case 'body':

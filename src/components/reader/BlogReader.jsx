@@ -1,4 +1,5 @@
 import ExternalLinkIcon from '../ExternalLinkIcon';
+import { PreviewableImage } from '../ImagePreview/ImagePreview';
 
 function renderBlock(block, index) {
   if (block.type === 'text') {
@@ -17,7 +18,14 @@ function renderBlock(block, index) {
   }
 
   if (block.type === 'image') {
-    return <img key={`image-${index}`} src={block.src} alt={block.alt || ''} loading="lazy" />;
+    return (
+      <PreviewableImage
+        key={`image-${index}`}
+        src={block.src}
+        alt={block.alt || ''}
+        loading="lazy"
+      />
+    );
   }
 
   if (block.type === 'video') {

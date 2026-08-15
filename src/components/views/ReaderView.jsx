@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import BlogReader from '../reader/BlogReader';
 import CaseStudyReader from '../reader/CaseStudyReader';
 import StackReader from '../reader/StackReader';
+import { writingAuthorshipNotes } from '../../data/portfolio';
 import { getCanonicalRouteForEntryType, navigateBackOrFallback } from '../../utils/navigation';
 import '../reader/reader.css';
 
@@ -15,6 +16,7 @@ function ReaderBody({ route }) {
 export default function ReaderView({ route }) {
   const fallbackHref = useMemo(() => getCanonicalRouteForEntryType(route.entryType), [route.entryType]);
   const isBlogReader = route.entryType === 'blog';
+  const authorshipNote = isBlogReader ? writingAuthorshipNotes[route.entry.slug] : null;
 
   function onBackClick(event) {
     event.preventDefault();
@@ -42,6 +44,7 @@ export default function ReaderView({ route }) {
       <header className="reader-header">
         <h1 id="reader-title">{route.entry.title}</h1>
         <p className="reader-summary">{route.entry.summary}</p>
+        {authorshipNote && <p className="authorship-note"><em>{authorshipNote}</em></p>}
       </header>
       <ReaderBody route={route} />
     </article>

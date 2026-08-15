@@ -2,10 +2,11 @@ import ExternalLinkIcon from '../ExternalLinkIcon';
 import './Sidebar.css';
 
 const NAV_LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#main-feed', label: 'Main Feed' },
-  { href: '#work', label: 'Work' },
-  { href: '#stack', label: 'Stack' },
+  { href: '#/', label: 'Home' },
+  { href: '#/notes', label: 'Notes' },
+  { href: '#/experiments', label: 'Experiments' },
+  { href: '#/stack', label: 'Stack' },
+  { href: '#/about', label: 'About' },
 ];
 
 const EXTERNAL_LINKS = [

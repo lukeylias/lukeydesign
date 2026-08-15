@@ -6,9 +6,15 @@ body,
 }
 
 .site-shell {
+  --route-motion-play-state: paused;
+
   width: min(calc(100% - 48px), 40rem);
   min-width: 0;
   margin: 0 auto;
+}
+
+.site-shell.is-route-motion-ready {
+  --route-motion-play-state: running;
 }
 
 .site-shell:has(.notes-page) {
@@ -61,6 +67,7 @@ body,
 .index-page > * {
   opacity: 0;
   animation: region-enter 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-play-state: var(--route-motion-play-state);
 }
 
 .home-intro,
@@ -182,26 +189,36 @@ body,
   text-decoration-color: #ededed;
 }
 
-/* Keep the active link bright while its siblings recede. */
+/* Keep the active homepage item bright while the other actions recede. */
 .selected-work__grid > *,
 .editorial-column__items > *,
 .home-notes__items > *,
+.home-about__copy,
+.home-about > p > a,
 .social-links > *,
 .compact-list > li,
 .notes-year__items > * {
   transition: opacity 240ms ease;
 }
 
-.selected-work__grid:has(a:hover) > :not(:has(a:hover)),
-.editorial-column__items:has(a:hover) > :not(:has(a:hover)),
-.home-notes__items:has(> a:hover) > a:not(:hover),
-.social-links:has(> a:hover) > a:not(:hover),
+.site-shell:has(.home-page :is(a, button):hover, .site-footer a:hover)
+  :is(
+    .home-page .editorial-item,
+    .home-page .home-note-link,
+    .home-page .home-about__copy,
+    .home-page .home-about > p > a,
+    .site-footer .social-links > a
+  ):not(:hover),
+.site-shell:has(.home-page :is(a, button):focus-visible, .site-footer a:focus-visible)
+  :is(
+    .home-page .editorial-item,
+    .home-page .home-note-link,
+    .home-page .home-about__copy,
+    .home-page .home-about > p > a,
+    .site-footer .social-links > a
+  ):not(:focus-within),
 .compact-list:has(a:hover) > :not(:has(a:hover)),
 .notes-year__items:has(a:hover) > :not(:hover),
-.selected-work__grid:has(a:focus-visible) > :not(:has(a:focus-visible)),
-.editorial-column__items:has(a:focus-visible) > :not(:has(a:focus-visible)),
-.home-notes__items:has(> a:focus-visible) > a:not(:focus-visible),
-.social-links:has(> a:focus-visible) > a:not(:focus-visible),
 .compact-list:has(a:focus-visible) > :not(:has(a:focus-visible)),
 .notes-year__items:has(a:focus-visible) > :not(:focus-visible) {
   opacity: 0.34;
@@ -227,6 +244,19 @@ body,
   line-height: 28px;
   letter-spacing: -0.008em;
   overflow-wrap: anywhere;
+}
+
+.authorship-note {
+  margin-top: 14px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+.authorship-note em {
+  font-style: italic;
 }
 
 .external-link {
@@ -582,7 +612,7 @@ a:hover .external-link-icon {
 .index-page__header > p,
 .notes-page__header > p {
   margin-top: 28px;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 28px;
 }
@@ -701,11 +731,11 @@ a:hover .external-link-icon {
   text-wrap: balance;
 }
 
-.case-study__hero > p:last-child,
-.side-project__hero > p:last-child {
+.case-study__summary,
+.side-project__summary {
   max-width: 38rem;
   margin-top: 24px;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: 17px;
   line-height: 29px;
   letter-spacing: -0.012em;
@@ -778,11 +808,27 @@ a:hover .external-link-icon {
 .case-section__content > p,
 .side-project__content > p {
   max-width: 38rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 29px;
   letter-spacing: -0.008em;
   overflow-wrap: anywhere;
+}
+
+.case-section__content strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.case-list {
+  max-width: 38rem;
+  padding-left: 22px;
+  color: var(--color-text);
+  display: grid;
+  gap: 8px;
+  font-size: 16px;
+  line-height: 29px;
+  letter-spacing: -0.008em;
 }
 
 .case-placeholder {
@@ -798,6 +844,30 @@ a:hover .external-link-icon {
   letter-spacing: 0.08em;
   line-height: 16px;
   text-transform: uppercase;
+}
+
+.case-media-placeholder {
+  max-width: 38rem;
+  padding: 18px 0;
+  border-top: 1px dashed var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
+  display: grid;
+  gap: 6px;
+}
+
+.case-media-placeholder__label {
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.case-media-placeholder__copy {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 22px;
 }
 
 .case-media {
@@ -1011,8 +1081,8 @@ a:hover .external-link-icon {
     font-size: 28px;
   }
 
-  .case-study__hero > p:last-child,
-  .side-project__hero > p:last-child {
+  .case-study__summary,
+  .side-project__summary {
     font-size: 16px;
     line-height: 28px;
   }

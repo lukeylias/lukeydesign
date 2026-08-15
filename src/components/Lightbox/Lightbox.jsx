@@ -1,54 +1,97 @@
-import { useRef } from 'react';
-import useFocusTrap from '../../hooks/useFocusTrap';
+import { useEffect, useRef } from 'react';
 import './Lightbox.css';
 
-/**
- * Lightbox overlay for images/gifs.
- *
- * Two render modes:
- *   1. **Inline** — rendered inside the modal's <dialog> as a sibling of modal__body.
- *      Parent passes `inline` prop; lightbox uses a fixed overlay within the dialog.
- *   2. **Standalone** — rendered at app root for card-thumbnail → lightbox without a modal.
- *      Uses its own <dialog> element.
- *
- * Both share the same visual treatment.
- */
-export default function Lightbox({ isOpen, media, onClose, inline = false }) {
-  const containerRef = useRef(null);
-  useFocusTrap(containerRef, isOpen && !!media);
+export default function Lightbox({ isOpen, media, onClose }) {
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
 
-  if (!isOpen || !media) return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  const content = (
-    <>
-      <div className="lightbox__backdrop" onClick={onClose} />
-      <div className="lightbox__container">
-        <div className="lightbox__titlebar">
-          <span className="lightbox__title">{media.alt || 'Image'}</span>
-          <button
-            className="modal__btn modal__btn--close"
-            aria-label="Close lightbox"
-            title="Close"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </div>
-        <div className="lightbox__body">
-          <img
-            className="lightbox__img"
-            src={media.src}
-            alt={media.alt || ''}
-          />
-        </div>
-      </div>
-    </>
-  );
+    if (isOpen && !dialog.open) {
+      dialog.showModal();
+      closeButtonRef.current?.focus();
+    } else if (!isOpen && dialog.open) {
+      dialog.close();
+    }
+  }, [isOpen]);
 
-  if (inline) {
-    return <div className="lightbox lightbox--inline" ref={containerRef}>{content}</div>;
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const root = document.documentElement;
+    const body = document.body;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const previousBodyStyles = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+
+    root.classList.add('image-preview-open');
+    body.classList.add('image-preview-open');
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = `-${scrollX}px`;
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+
+    return () => {
+      root.classList.remove('image-preview-open');
+      body.classList.remove('image-preview-open');
+      Object.assign(body.style, previousBodyStyles);
+      window.scrollTo({ top: scrollY, left: scrollX, behavior: 'auto' });
+    };
+  }, [isOpen]);
+
+  function requestClose() {
+    dialogRef.current?.close();
   }
 
-  // Standalone mode — render as a simple fixed overlay
-  return <div className="lightbox lightbox--standalone" ref={containerRef}>{content}</div>;
+  function handleDialogClick(event) {
+    if (event.target === dialogRef.current) requestClose();
+  }
+
+  function handleDialogKeyDown(event) {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    requestClose();
+  }
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="lightbox"
+      aria-label={media?.alt || 'Image preview'}
+      aria-describedby="image-preview-instructions"
+      onClick={handleDialogClick}
+      onClose={onClose}
+      onKeyDown={handleDialogKeyDown}
+    >
+      <button
+        ref={closeButtonRef}
+        className="lightbox__close"
+        type="button"
+        aria-label="Close image preview"
+        onClick={requestClose}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </svg>
+      </button>
+      <p className="visually-hidden" id="image-preview-instructions">
+        Press Escape, select the close button, or select outside the image to close the preview.
+      </p>
+      {media && (
+        <img
+          className="lightbox__img"
+          src={media.src}
+          alt={media.alt || ''}
+        />
+      )}
+    </dialog>
+  );
 }

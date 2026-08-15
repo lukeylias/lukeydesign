@@ -11,14 +11,23 @@ import {
   normaliseMediaBlock,
   selectedWork,
   sideProjects,
+  workAuthorshipNotes,
   workProjects,
   writing,
 } from '../../data/portfolio';
 import '../../styles/portfolio.css';
+import { PreviewableImage } from '../ImagePreview/ImagePreview';
 
 const writingDateBySlug = Object.fromEntries(
   blogAndExperimentEntries.map((entry) => [entry.slug, entry.date]),
 );
+
+const experiments = blogAndExperimentEntries
+  .filter((entry) => entry.type === 'experiment')
+  .map((entry) => ({
+    ...entry,
+    headline: entry.title,
+  }));
 
 function Arrow() {
   return (
@@ -30,7 +39,7 @@ function Arrow() {
 
 function ProjectImage({ media, eager = false }) {
   return (
-    <img
+    <PreviewableImage
       src={media.src}
       width={media.width}
       height={media.height}
@@ -68,6 +77,8 @@ function ReelPlaceholder() {
     </figure>
   );
 }
+
+const SHOW_REEL_PLACEHOLDER = false;
 
 export function SiteFooter() {
   return (
@@ -123,14 +134,14 @@ const homeSideProjectDescriptions = {
 };
 
 const homeWorkDescriptions = {
-  'experimentation-at-nib': '13% uplift to quote.',
-  'accessibility-at-nib': 'Playbook and guild.',
-  'stacks-design-system': '40% faster builds.',
+  'experimentation-at-nib': 'Redefining how nib identifies, runs and measures product experiments.',
+  'accessibility-at-nib': 'Building the playbook, training and community that support accessibility at nib.',
+  'stacks-design-system': 'Creating a shared design system for consistent product delivery.',
 };
 
 const selectedDescriptions = {
-  'iwhi-funnel-redesign': 'Turned a technical rebuild into a full funnel redesign and shipped production React.',
-  'offer-management': 'Replaced a manual process and reduced offer creation from weeks to minutes.',
+  'iwhi-funnel-redesign': 'Redesigning the quote and join experience for international customers.',
+  'offer-management': 'Bringing offer creation, audience selection and delivery into one internal tool.',
 };
 
 function EditorialItem({ href, title, description, media, eager = false }) {
@@ -143,7 +154,6 @@ function EditorialItem({ href, title, description, media, eager = false }) {
       )}
       <a className="editorial-item__link" href={href}>
         <span>{title}</span>
-        <Arrow />
       </a>
       <p>{description}</p>
     </article>
@@ -174,13 +184,15 @@ export function HomePage() {
         <h1 id="home-title">Luke Ylias</h1>
         <div className="home-intro__copy">
           <p>
-            <em>Product design with technical depth.</em>{' '}
-            I design, write production code, and build AI deeply into my workflow.
+            <em>
+              Senior Product Designer focused on experimentation, AI and product strategy. I’m also
+              hands-on with code, building tools that help me take ideas further.
+            </em>
           </p>
         </div>
       </header>
 
-      <ReelPlaceholder />
+      {SHOW_REEL_PLACEHOLDER && <ReelPlaceholder />}
 
       <div className="home-index-scroll">
         <div className="home-index">
@@ -230,7 +242,7 @@ export function HomePage() {
         <h2 id="home-notes-title">Notes</h2>
         <div className="home-notes__items">
           <HomeNoteLink href={writing[0].href}>
-            {writing[0].headline} — a voice-first workflow.
+            {writing[0].headline}. A voice-first workflow.
           </HomeNoteLink>
           <HomeNoteLink href="#/notes">All notes on design, code, and AI.</HomeNoteLink>
         </div>
@@ -239,8 +251,11 @@ export function HomePage() {
       <section className="home-about" aria-labelledby="home-about-title">
         <h2 id="home-about-title">About</h2>
         <p>
-          I care about outcomes over aesthetics. Design should solve real problems and
-          connect to business value. <a href="#/about">More about me</a>.
+          <span className="home-about__copy">
+            My work spans experimentation, product strategy and delivery, with AI and code
+            as part of the day-to-day process.{' '}
+          </span>
+          <a href="#/about">More about me.</a>
         </p>
       </section>
     </article>
@@ -294,7 +309,7 @@ export function NotesPage() {
       <div className="notes-page__content">
         <a className="back-link" href="#/"><Arrow /> Back</a>
         <header className="notes-page__header">
-          <h1 id="notes-title">Writing</h1>
+          <h1 id="notes-title">Notes</h1>
         </header>
 
         <NoteList items={writing} />
@@ -312,6 +327,18 @@ export function SideProjectIndexPage() {
         <p>I build my own tools when what I need doesn’t exist.</p>
       </header>
       <CompactLinkList items={sideProjects} />
+    </section>
+  );
+}
+
+export function ExperimentIndexPage() {
+  return (
+    <section className="index-page index-page--compact" aria-labelledby="experiment-index-title">
+      <a className="back-link" href="#/"><Arrow /> Back</a>
+      <header className="index-page__header">
+        <h1 id="experiment-index-title">Experiments</h1>
+      </header>
+      <CompactLinkList items={experiments} />
     </section>
   );
 }
@@ -373,6 +400,27 @@ export function AboutPage() {
   );
 }
 
+function EmphasizedText({ value, phrases = [] }) {
+  if (phrases.length === 0) return value;
+
+  const matches = phrases
+    .map((phrase) => ({ phrase, start: value.indexOf(phrase) }))
+    .filter((match) => match.start >= 0)
+    .sort((a, b) => a.start - b.start);
+  const content = [];
+  let cursor = 0;
+
+  matches.forEach(({ phrase, start }) => {
+    if (start < cursor) return;
+    if (start > cursor) content.push(value.slice(cursor, start));
+    content.push(<strong key={`${start}-${phrase}`}>{phrase}</strong>);
+    cursor = start + phrase.length;
+  });
+
+  if (cursor < value.length) content.push(value.slice(cursor));
+  return content;
+}
+
 function ContentBlock({ block, eager = false }) {
   const mediaBlock = normaliseMediaBlock(block);
 
@@ -383,14 +431,21 @@ function ContentBlock({ block, eager = false }) {
         data-content-needed={mediaBlock.placeholderFor || undefined}
       >
         {mediaBlock.placeholder ? <span className="case-placeholder__status">Content needed</span> : null}
-        {mediaBlock.value}
+        <EmphasizedText value={mediaBlock.value} phrases={mediaBlock.emphasis} />
       </p>
+    );
+  }
+  if (mediaBlock.type === 'list') {
+    return (
+      <ul className="case-list">
+        {mediaBlock.items.map((item) => <li key={item}>{item}</li>)}
+      </ul>
     );
   }
   if (mediaBlock.type === 'image') {
     return (
       <figure className="case-media">
-        <img
+        <PreviewableImage
           src={mediaBlock.src}
           width={mediaBlock.width}
           height={mediaBlock.height}
@@ -400,6 +455,14 @@ function ContentBlock({ block, eager = false }) {
           decoding="async"
         />
       </figure>
+    );
+  }
+  if (mediaBlock.type === 'media-placeholder') {
+    return (
+      <div className="case-media-placeholder" aria-label="Suggested imagery">
+        <span className="case-media-placeholder__label">Suggested imagery</span>
+        <span className="case-media-placeholder__copy">{mediaBlock.value}</span>
+      </div>
     );
   }
   if (mediaBlock.type === 'video') {
@@ -455,7 +518,8 @@ export function CaseStudyPage({ slug }) {
       <a className="back-link" href="#/"><Arrow /> Back</a>
       <header className="case-study__hero">
         <h1 id="case-study-title">{project.headline}</h1>
-        <p>{project.body}</p>
+        <p className="case-study__summary">{project.body}</p>
+        <p className="authorship-note"><em>{workAuthorshipNotes[project.slug]}</em></p>
       </header>
 
       <figure className="case-study__cover">
@@ -512,7 +576,7 @@ export function SideProjectPage({ slug }) {
       <header className="side-project__hero">
         <p className="eyebrow">Side project</p>
         <h1 id="side-project-title">{project.headline}</h1>
-        <p>{project.body}</p>
+        <p className="side-project__summary">{project.body}</p>
       </header>
       <div className="side-project__content">
         {project.modalContent.map((block, index) => (

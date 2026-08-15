@@ -8,6 +8,7 @@ import {
 import {
   AboutPage,
   CaseStudyPage,
+  ExperimentIndexPage,
   HomePage,
   NotesPage,
   NotFoundPage,
@@ -18,6 +19,7 @@ import {
 import ExperimentView from './components/views/ExperimentView';
 import ReaderView from './components/views/ReaderView';
 import StackView from './components/views/StackView';
+import { ImagePreviewProvider } from './components/ImagePreview/ImagePreview';
 import useHashRouter from './hooks/useHashRouter';
 import './styles/tokens.css';
 import './styles/reset.css';
@@ -26,11 +28,14 @@ import './styles/portfolio.css';
 
 function titleForRoute(route) {
   if (route.type === 'home') return 'Luke Ylias — Product Designer';
-  if (route.type === 'notes') return 'Writing — Luke Ylias';
+  if (route.type === 'notes') return 'Notes — Luke Ylias';
   if (route.type === 'about') return 'About — Luke Ylias';
   if (route.type === 'work-detail') return `${route.project.headline} — Luke Ylias`;
   if (route.type === 'side-project-detail') return `${route.project.headline} — Luke Ylias`;
   if (route.type === 'side-project-index') return 'Side projects — Luke Ylias';
+  if (route.type === 'experiment-index') return 'Experiments — Luke Ylias';
+  if (route.type === 'experiment') return `${route.entry.title} — Luke Ylias`;
+  if (route.type === 'stack-list') return 'Stack — Luke Ylias';
   if (route.type === 'reader') return `${route.entry.title} — Luke Ylias`;
   return 'Luke Ylias';
 }
@@ -42,6 +47,7 @@ function renderPage(route) {
   if (route.type === 'work-detail') return <CaseStudyPage slug={route.slug} />;
   if (route.type === 'side-project-detail') return <SideProjectPage slug={route.slug} />;
   if (route.type === 'side-project-index') return <SideProjectIndexPage />;
+  if (route.type === 'experiment-index') return <ExperimentIndexPage />;
 
   // These views remain available for existing deep links, but are intentionally
   // kept outside the new primary navigation.
@@ -57,6 +63,7 @@ export default function App() {
   const mainRef = useRef(null);
   const navigationTimerRef = useRef(null);
   const [leavingRoute, setLeavingRoute] = useState(null);
+  const [routeMotionReady, setRouteMotionReady] = useState(false);
   const routeLeaving = leavingRoute === route.hash;
 
   useEffect(() => {
@@ -74,6 +81,29 @@ export default function App() {
 
   useEffect(() => () => {
     window.clearTimeout(navigationTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    let firstFrame;
+    let secondFrame;
+
+    function startRouteMotion() {
+      firstFrame = window.requestAnimationFrame(() => {
+        secondFrame = window.requestAnimationFrame(() => {
+          if (!cancelled) setRouteMotionReady(true);
+        });
+      });
+    }
+
+    const fontsReady = document.fonts?.ready || Promise.resolve();
+    fontsReady.then(startRouteMotion, startRouteMotion);
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -126,12 +156,12 @@ export default function App() {
   }
 
   return (
-    <>
+    <ImagePreviewProvider>
       <a className="skip-nav" href="#main-content" onClick={skipToContent}>
         Skip to content
       </a>
       <div
-        className={`site-shell${routeLeaving ? ' is-route-leaving' : ''}`}
+        className={`site-shell${routeMotionReady ? ' is-route-motion-ready' : ''}${routeLeaving ? ' is-route-leaving' : ''}`}
         onClickCapture={handleRouteClick}
       >
         <main id="main-content" ref={mainRef} tabIndex="-1">
@@ -141,6 +171,6 @@ export default function App() {
         </main>
         <SiteFooter />
       </div>
-    </>
+    </ImagePreviewProvider>
   );
 }

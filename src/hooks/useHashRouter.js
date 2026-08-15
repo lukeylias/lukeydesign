@@ -28,5 +28,10 @@ export default function useHashRouter() {
 
   const route = useMemo(() => parseRoute(hash), [hash]);
 
+  useEffect(() => {
+    if (route.hash === hash) return;
+    window.location.replace(route.hash);
+  }, [hash, route.hash]);
+
   return { route };
 }

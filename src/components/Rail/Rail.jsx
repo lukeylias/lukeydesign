@@ -2,9 +2,8 @@ import { useMemo, useRef, useState } from 'react';
 import './Rail.css';
 
 const NAV_ITEMS = [
-  { label: '~/feed', href: '#/' },
-  { label: 'blog/', href: '#/blog' },
-  { label: 'case-studies/', href: '#/case-studies' },
+  { label: '~/', href: '#/' },
+  { label: 'notes/', href: '#/notes' },
   { label: 'experiments/', href: '#/experiments' },
   { label: 'stack/', href: '#/stack' },
   { label: 'about/', href: '#/about' },
@@ -12,18 +11,14 @@ const NAV_ITEMS = [
 
 function isActive(route, href) {
   if (href === '#/') {
-    return route.type === 'feed' && route.filter === 'all';
+    return route.type === 'home' || route.type === 'work-detail';
   }
-  if (href === '#/blog') {
-    return (route.type === 'feed' && route.filter === 'blog')
+  if (href === '#/notes') {
+    return route.type === 'notes'
       || ((route.type === 'reader' || route.type === 'reader-not-found') && route.entryType === 'blog');
   }
-  if (href === '#/case-studies') {
-    return (route.type === 'feed' && route.filter === 'case-studies')
-      || ((route.type === 'reader' || route.type === 'reader-not-found') && route.entryType === 'case-studies');
-  }
   if (href === '#/experiments') {
-    return (route.type === 'feed' && route.filter === 'experiment')
+    return route.type === 'experiment-index'
       || route.type === 'experiment'
       || route.type === 'experiment-not-found';
   }

@@ -247,7 +247,7 @@
 .reader-shell--blog .reader-summary {
   max-width: 38rem;
   margin-top: 24px;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 29px;
   letter-spacing: -0.012em;
@@ -258,7 +258,7 @@
 }
 
 .reader-shell--blog .reader-content p {
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 29px;
   letter-spacing: -0.008em;

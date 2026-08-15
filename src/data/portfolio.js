@@ -1,5 +1,6 @@
 import mainFeed from './mainFeed';
 import work from './work';
+import { getCanonicalWorkSlug, getInternalWorkSlug } from '../utils/routeSlugs';
 
 const WORK_ORDER = [
   'iwhi-funnel-redesign',
@@ -22,12 +23,27 @@ const WRITING_ORDER = [
   'skills',
 ];
 
+export const workAuthorshipNotes = {
+  'iwhi-funnel-redesign': 'This case study was written by hand, in my own words.',
+  'offer-management': 'Written by hand from my direct experience of the project.',
+  'experimentation-at-nib': 'I wrote this case study by hand from the work behind it.',
+  'accessibility-at-nib': 'Written by hand, based on my experience leading this work.',
+  'stacks-design-system': 'This account was written by hand from my own project experience.',
+  'secure-messaging': 'I wrote this case study by hand, drawing on my direct involvement.',
+};
+
+export const writingAuthorshipNotes = {
+  'giving-my-agent-a-voice': 'This note was written by hand, in my own words.',
+  'claude-design-isnt-replacing-designers': 'Written by hand from my own perspective and experience.',
+  skills: 'I wrote this note by hand, in my own words.',
+};
+
 const WORK_MEDIA = {
   'iwhi-funnel-redesign': {
     src: '/images/iwhi-select-cover.webp',
     width: 2400,
     height: 1707,
-    alt: 'IWHI cover selection experience',
+    alt: 'International funnel cover selection experience',
   },
   'offer-management': {
     src: '/images/Offers-Landing-Page.webp',
@@ -102,7 +118,8 @@ export const workProjects = WORK_ORDER
   .filter(Boolean)
   .map((project) => ({
     ...project,
-    href: `#/work/${project.slug}`,
+    routeSlug: getCanonicalWorkSlug(project.slug),
+    href: `#/work/${getCanonicalWorkSlug(project.slug)}`,
     media: WORK_MEDIA[project.slug],
     selectedLabel: getProjectFacts(project)?.organisation || null,
   }));
@@ -123,11 +140,12 @@ export const writing = WRITING_ORDER
   .filter(Boolean)
   .map((entry) => ({
     ...entry,
-    href: `#/blog/${entry.slug}`,
+    href: `#/notes/${entry.slug}`,
   }));
 
 export function findWorkProject(slug) {
-  return workProjects.find((project) => project.slug === slug) || null;
+  const internalSlug = getInternalWorkSlug(slug);
+  return workProjects.find((project) => project.slug === internalSlug) || null;
 }
 
 export function findSideProject(slug) {
@@ -160,81 +178,133 @@ export function getProjectFacts(project) {
 const caseStudySectionSelectors = {
   'iwhi-funnel-redesign': {
     context: [
-      { type: 'text', startsWith: 'nib is one of' },
-      { type: 'text', startsWith: 'The project started as' },
+      { type: 'text', startsWith: 'The International Workers Health Insurance funnel' },
+      { type: 'text', startsWith: 'The funnel also assumed people were ready to join' },
     ],
     problem: [
-      { type: 'image', alt: 'IWHI funnel before redesign' },
-      { type: 'text', startsWith: 'I dug into ContentSquare' },
+      { type: 'image', alt: 'International funnel before-and-after comparison' },
+      { type: 'text', startsWith: 'I reviewed Contentsquare data' },
+      { type: 'text', startsWith: 'The evidence pointed to two priorities' },
     ],
     contribution: [
-      { type: 'text', startsWith: 'I also jumped into the codebase' },
+      { type: 'text', startsWith: 'I owned the end-to-end experience' },
+      { type: 'text', startsWith: 'To keep the implementation consistent' },
     ],
     decisions: [
-      { type: 'text', startsWith: 'I shaped a vision' },
-      { type: 'image', alt: 'IWHI select cover redesign' },
+      { type: 'text', startsWith: 'We separated quoting from joining' },
+      { type: 'media-placeholder', startsWith: 'Journey diagram' },
+      { type: 'image', alt: 'International funnel cover selection redesign' },
+    ],
+    shipped: [
+      { type: 'media-placeholder', startsWith: 'Mobile screen sequence' },
+      { type: 'text', startsWith: 'The final experience creates' },
+      { type: 'text', startsWith: 'Quoting and joining are separated' },
     ],
     outcomes: [
-      { type: 'text', startsWith: 'Internal testing has been' },
+      { type: 'text', startsWith: 'Following its January launch' },
     ],
-    reflection: [],
+    reflection: [
+      { type: 'text', startsWith: 'The hardest part was accounting' },
+      { type: 'text', startsWith: 'I would involve developers and technical product specialists' },
+    ],
   },
   'offer-management': {
     context: [],
     problem: [
-      { type: 'text', startsWith: 'The operations team was' },
+      { type: 'text', startsWith: 'The offer team relied on Excel sheets' },
+      { type: 'text', startsWith: 'From initial idea to a live customer offer' },
     ],
     contribution: [
-      { type: 'text', startsWith: 'I designed a modern interface' },
+      { type: 'text', startsWith: 'I owned the research' },
     ],
     decisions: [
-      { type: 'image', alt: 'Offers landing page' },
+      { type: 'text', startsWith: 'Rather than digitising each existing step' },
+      { type: 'text', startsWith: 'The largest change was bringing audience selection' },
+      { type: 'media-placeholder', startsWith: 'Early concept or target-state system design' },
+    ],
+    shipped: [
+      { type: 'text', startsWith: 'The initial V1 launched internally' },
+      { type: 'text', startsWith: 'The release removed most of the manual handoffs' },
+      { type: 'media-placeholder', startsWith: 'Final screen sequence' },
     ],
     outcomes: [
-      { type: 'text', startsWith: 'Offer creation dropped' },
+      { type: 'text', startsWith: 'The core workflow now takes around 30 minutes' },
+      { type: 'text', startsWith: 'Marketing and offer teams spend less time' },
     ],
     reflection: [
-      { type: 'text', startsWith: 'Using a "best, better, good"' },
+      { type: 'text', startsWith: 'The main learning was that mapping the visible steps' },
+      { type: 'text', startsWith: 'Recurring sessions helped us uncover those details' },
     ],
   },
   'experimentation-at-nib': {
     context: [
-      { type: 'text', startsWith: 'When the experimentation team' },
+      { type: 'text', startsWith: 'At the end of 2025' },
+      { type: 'text', startsWith: 'Before the handover' },
     ],
     problem: [
-      { type: 'image', alt: 'nib experimentation' },
+      { type: 'text', startsWith: 'I reviewed three years of qualitative research' },
+      { type: 'text', startsWith: 'The work identified four focus areas' },
+      { type: 'list', startsWith: 'Starting the quote feels like too much commitment' },
+      { type: 'text', startsWith: 'Organising experiments around these problems' },
+      { type: 'media-placeholder', startsWith: 'Visual summary of the four problem areas' },
     ],
     contribution: [
-      { type: 'text', startsWith: 'I built a lean experimentation process' },
+      { type: 'text', startsWith: 'I initially ran experiments end to end' },
     ],
     decisions: [
-      { type: 'text', startsWith: 'One experiment stands out' },
-      { type: 'image', alt: 'ContentSquare analysis' },
+      { type: 'text', startsWith: 'The previous cadence assumed only one experiment' },
+      { type: 'text', startsWith: 'I introduced parallel and overlapping experiments' },
+      { type: 'text', startsWith: 'Each experiment is tied to a problem area' },
+      { type: 'text', startsWith: 'I also reset how success was measured' },
+    ],
+    shipped: [
+      { type: 'text', startsWith: 'One larger experiment addressed' },
+      { type: 'image', alt: 'Contentsquare analysis of the quote welcome form' },
+      { type: 'text', startsWith: 'The control presented seven fields' },
+      { type: 'text', startsWith: 'A simple first question also routed international visitors' },
+      { type: 'media-placeholder', startsWith: 'Control and treatment screens' },
     ],
     outcomes: [
-      { type: 'text', startsWith: 'The result was 13%' },
+      { type: 'text', startsWith: 'The experiment ran from 14 May' },
+      { type: 'text', startsWith: 'Quote Complete increased by 6.48%' },
+      { type: 'text', startsWith: 'The program now supports parallel and overlapping experiments' },
+      { type: 'media-placeholder', startsWith: 'Redacted Optimizely result' },
     ],
     reflection: [
-      { type: 'text', startsWith: 'Not every experiment wins' },
-      { type: 'text', startsWith: 'One shift I pushed for' },
+      { type: 'text', startsWith: 'The hardest part was aligning teams' },
+      { type: 'text', startsWith: 'The remaining challenge is helping more people' },
     ],
   },
   'accessibility-at-nib': {
-    context: [],
+    context: [
+      { type: 'text', startsWith: 'I began this work in mid-2024' },
+      { type: 'text', startsWith: 'Accessibility was handled reactively' },
+      { type: 'text', startsWith: 'I led the work independently at first' },
+    ],
     problem: [
-      { type: 'text', startsWith: 'Accessibility at nib was reactive' },
+      { type: 'text', startsWith: 'The first deliverable was a single-page guide' },
+      { type: 'text', startsWith: 'I created a11ycats at the same time' },
+      { type: 'text', startsWith: 'An external accessibility agency then completed' },
+      { type: 'text', startsWith: 'After the audit, I expanded the initial guidance' },
+      { type: 'list', startsWith: 'Identify common accessibility issues' },
     ],
     contribution: [
-      { type: 'text', startsWith: 'I built an internal Playbook' },
+      { type: 'text', startsWith: 'The website included videos and practical examples' },
+      { type: 'text', startsWith: 'I then presented to around six product teams' },
+      { type: 'text', startsWith: 'The hands-on format gave teams direct experience' },
     ],
     decisions: [
-      { type: 'image', alt: 'Speaking at nib on accessibility' },
+      { type: 'text', startsWith: 'Accessibility checks began appearing in delivery workflows' },
     ],
     outcomes: [
-      { type: 'text', startsWith: 'Multiple product teams now' },
+      { type: 'text', startsWith: 'My product team completed 45 accessibility tickets' },
+      { type: 'text', startsWith: 'The guidance, playbook and hands-on sessions' },
+      { type: 'text', startsWith: 'I joined a panel for International Accessibility Day' },
+      { type: 'text', startsWith: 'I also contributed to early concepts' },
     ],
     reflection: [
-      { type: 'text', startsWith: 'The biggest shift wasn' },
+      { type: 'text', startsWith: 'The hardest part was making the work sustainable' },
+      { type: 'text', startsWith: 'If I approached it again' },
     ],
   },
   'stacks-design-system': {
@@ -289,47 +359,46 @@ const featuredCaseStudyConfigs = {
       {
         title: 'Problem and stakes',
         selectors: [
-          { type: 'text', startsWith: 'The project started as' },
+          { type: 'text', startsWith: 'The International Workers Health Insurance funnel' },
+          { type: 'text', startsWith: 'The funnel also assumed people were ready to join' },
         ],
       },
       {
         title: 'Evidence and direction',
         selectors: [
-          { type: 'image', alt: 'IWHI funnel before redesign' },
-          { type: 'text', startsWith: 'I dug into ContentSquare' },
+          { type: 'image', alt: 'International funnel before-and-after comparison' },
+          { type: 'text', startsWith: 'I reviewed Contentsquare data' },
+          { type: 'text', startsWith: 'The evidence pointed to two priorities' },
         ],
       },
       {
         title: 'Key decisions',
         selectors: [
-          { type: 'text', startsWith: 'I shaped a vision' },
-          { type: 'text', startsWith: 'I also jumped into the codebase' },
-        ],
-        placeholders: [
-          'Decision alternatives, constraints, trade-offs, and the effect of each choice',
+          { type: 'text', startsWith: 'I owned the end-to-end experience' },
+          { type: 'text', startsWith: 'We separated quoting from joining' },
+          { type: 'media-placeholder', startsWith: 'Journey diagram' },
+          { type: 'text', startsWith: 'To keep the implementation consistent' },
         ],
       },
       {
         title: 'The shipped experience',
-        selectors: [],
-        placeholders: [
-          'Final flow narrative and additional shipped desktop, mobile, or interaction media',
+        selectors: [
+          { type: 'media-placeholder', startsWith: 'Mobile screen sequence' },
+          { type: 'text', startsWith: 'The final experience creates' },
+          { type: 'text', startsWith: 'Quoting and joining are separated' },
         ],
       },
       {
         title: 'Impact and evidence',
         selectors: [
-          { type: 'text', startsWith: 'Internal testing has been' },
-        ],
-        placeholders: [
-          'Verified quantitative outcomes, measurement method, timeframe, and source',
+          { type: 'text', startsWith: 'Following its January launch' },
         ],
       },
       {
         title: 'Reflection',
-        selectors: [],
-        placeholders: [
-          'What changed, what did not, and what Luke would do differently',
+        selectors: [
+          { type: 'text', startsWith: 'The hardest part was accounting' },
+          { type: 'text', startsWith: 'I would involve developers and technical product specialists' },
         ],
       },
     ],
@@ -339,48 +408,165 @@ const featuredCaseStudyConfigs = {
       {
         title: 'Problem and stakes',
         selectors: [
-          { type: 'text', startsWith: 'The operations team was' },
+          { type: 'text', startsWith: 'The offer team relied on Excel sheets' },
+          { type: 'text', startsWith: 'From initial idea to a live customer offer' },
         ],
       },
       {
         title: 'Evidence and direction',
-        selectors: [],
-        placeholders: [
-          'Research, operational evidence, and insights that shaped the direction',
+        selectors: [
+          { type: 'text', startsWith: 'We started with working sessions' },
+          { type: 'text', startsWith: 'We set up recurring sessions' },
+          { type: 'media-placeholder', startsWith: 'Current-state Miro workflow' },
         ],
       },
       {
         title: 'Key decisions',
         selectors: [
-          { type: 'text', startsWith: 'I designed a modern interface' },
-        ],
-        placeholders: [
-          'Decision alternatives, constraints, trade-offs, and the effect of each choice',
+          { type: 'text', startsWith: 'I owned the research' },
+          { type: 'text', startsWith: 'Rather than digitising each existing step' },
+          { type: 'text', startsWith: 'The largest change was bringing audience selection' },
+          { type: 'media-placeholder', startsWith: 'Early concept or target-state system design' },
         ],
       },
       {
         title: 'The shipped experience',
-        selectors: [],
-        placeholders: [
-          'Final workflow narrative and additional shipped screens or interaction media',
+        selectors: [
+          { type: 'text', startsWith: 'The initial V1 launched internally' },
+          { type: 'text', startsWith: 'The release removed most of the manual handoffs' },
+          { type: 'media-placeholder', startsWith: 'Final screen sequence' },
         ],
       },
       {
         title: 'Impact and evidence',
         selectors: [
-          { type: 'text', startsWith: 'Offer creation dropped' },
-        ],
-        placeholders: [
-          'Measurement method, timeframe, source, and qualitative evidence',
+          { type: 'text', startsWith: 'The core workflow now takes around 30 minutes' },
+          { type: 'text', startsWith: 'Marketing and offer teams spend less time' },
         ],
       },
       {
         title: 'Reflection',
         selectors: [
-          { type: 'text', startsWith: 'Using a "best, better, good"' },
+          { type: 'text', startsWith: 'The main learning was that mapping the visible steps' },
+          { type: 'text', startsWith: 'Recurring sessions helped us uncover those details' },
         ],
-        placeholders: [
-          'What Luke would change or explore next',
+      },
+    ],
+  },
+  'experimentation-at-nib': {
+    sections: [
+      {
+        title: 'Context and mandate',
+        selectors: [
+          { type: 'text', startsWith: 'At the end of 2025' },
+          { type: 'text', startsWith: 'Before the handover' },
+        ],
+      },
+      {
+        title: 'Evidence and focus areas',
+        selectors: [
+          { type: 'text', startsWith: 'I reviewed three years of qualitative research' },
+          { type: 'text', startsWith: 'The work identified four focus areas' },
+          { type: 'list', startsWith: 'Starting the quote feels like too much commitment' },
+          { type: 'text', startsWith: 'Organising experiments around these problems' },
+          { type: 'media-placeholder', startsWith: 'Visual summary of the four problem areas' },
+        ],
+      },
+      {
+        title: 'Building the operating model',
+        selectors: [
+          { type: 'text', startsWith: 'The previous cadence assumed only one experiment' },
+          { type: 'text', startsWith: 'I introduced parallel and overlapping experiments' },
+          { type: 'text', startsWith: 'Each experiment is tied to a problem area' },
+          { type: 'text', startsWith: 'I also reset how success was measured' },
+          { type: 'text', startsWith: 'I initially ran experiments end to end' },
+        ],
+      },
+      {
+        title: 'A representative experiment',
+        selectors: [
+          { type: 'text', startsWith: 'One larger experiment addressed' },
+          { type: 'image', alt: 'Contentsquare analysis of the quote welcome form' },
+          { type: 'text', startsWith: 'The control presented seven fields' },
+          { type: 'text', startsWith: 'A simple first question also routed international visitors' },
+          { type: 'media-placeholder', startsWith: 'Control and treatment screens' },
+        ],
+      },
+      {
+        title: 'Impact and evidence',
+        selectors: [
+          { type: 'text', startsWith: 'The experiment ran from 14 May' },
+          { type: 'text', startsWith: 'Quote Complete increased by 6.48%' },
+          { type: 'text', startsWith: 'The program now supports parallel and overlapping experiments' },
+          { type: 'media-placeholder', startsWith: 'Redacted Optimizely result' },
+        ],
+      },
+      {
+        title: 'Reflection',
+        selectors: [
+          { type: 'text', startsWith: 'The hardest part was aligning teams' },
+          { type: 'text', startsWith: 'The remaining challenge is helping more people' },
+        ],
+      },
+    ],
+  },
+  'accessibility-at-nib': {
+    sections: [
+      {
+        title: 'Context and impetus',
+        selectors: [
+          { type: 'text', startsWith: 'I began this work in mid-2024' },
+          { type: 'text', startsWith: 'Accessibility was handled reactively' },
+          { type: 'text', startsWith: 'I led the work independently at first' },
+        ],
+      },
+      {
+        title: 'Starting with practical guidance',
+        selectors: [
+          { type: 'text', startsWith: 'The first deliverable was a single-page guide' },
+          { type: 'text', startsWith: 'I created a11ycats at the same time' },
+          { type: 'media-placeholder', startsWith: 'Original single-page guide' },
+        ],
+      },
+      {
+        title: 'Establishing the remediation baseline',
+        selectors: [
+          { type: 'text', startsWith: 'An external accessibility agency then completed' },
+          { type: 'media-placeholder', startsWith: 'Redacted audit summary' },
+        ],
+      },
+      {
+        title: 'Developing the interactive playbook',
+        selectors: [
+          { type: 'text', startsWith: 'After the audit, I expanded the initial guidance' },
+          { type: 'list', startsWith: 'Identify common accessibility issues' },
+          { type: 'text', startsWith: 'The website included videos and practical examples' },
+          { type: 'media-placeholder', startsWith: 'Interactive playbook pages' },
+        ],
+      },
+      {
+        title: 'Building participation',
+        selectors: [
+          { type: 'text', startsWith: 'I then presented to around six product teams' },
+          { type: 'text', startsWith: 'The hands-on format gave teams direct experience' },
+          { type: 'media-placeholder', startsWith: 'Roadshow deck' },
+        ],
+      },
+      {
+        title: 'Impact and visibility',
+        selectors: [
+          { type: 'text', startsWith: 'My product team completed 45 accessibility tickets' },
+          { type: 'text', startsWith: 'The guidance, playbook and hands-on sessions' },
+          { type: 'text', startsWith: 'Accessibility checks began appearing in delivery workflows' },
+          { type: 'text', startsWith: 'I joined a panel for International Accessibility Day' },
+          { type: 'text', startsWith: 'I also contributed to early concepts' },
+        ],
+      },
+      {
+        title: 'Reflection',
+        selectors: [
+          { type: 'text', startsWith: 'The hardest part was making the work sustainable' },
+          { type: 'text', startsWith: 'If I approached it again' },
         ],
       },
     ],
@@ -390,7 +576,10 @@ const featuredCaseStudyConfigs = {
 function matchesSectionSelector(block, selector) {
   if (!block || block.type !== selector.type) return false;
   if (selector.alt) return block.alt === selector.alt;
-  if (selector.startsWith) return block.value?.startsWith(selector.startsWith);
+  if (selector.startsWith) {
+    if (typeof block.value === 'string') return block.value.startsWith(selector.startsWith);
+    if (Array.isArray(block.items)) return block.items[0]?.startsWith(selector.startsWith);
+  }
   return false;
 }
 

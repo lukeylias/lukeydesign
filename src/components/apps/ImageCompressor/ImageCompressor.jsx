@@ -8,6 +8,7 @@ import {
   playSuccess,
   playError,
 } from '../../../utils/sounds';
+import { PreviewableImage } from '../../ImagePreview/ImagePreview';
 import './ImageCompressor.css';
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
@@ -200,7 +201,11 @@ export default function ImageCompressor() {
 
       {/* Preview */}
       <div className="compressor__preview">
-        <img className="compressor__preview-image" src={preview} alt="Preview" />
+        <PreviewableImage
+          className="compressor__preview-image"
+          src={preview}
+          alt={`Preview of ${file.name}`}
+        />
         <span className="compressor__file-info">
           {file.name} - {formatBytes(file.size)}
           {imgDimensions && ` - ${imgDimensions.width}×${imgDimensions.height}`}
